@@ -1,0 +1,13 @@
+Glosario
+SO: sistema operativo
+SE: sistema embebido
+RT: tiempo real, la aplicación está asegurada a cumplir los dead lines. Esa garantía la da el SO y el procesador.
+
+Preguntas orientadoras 
+1.	Describa brevemente los diferentes perfiles de familias de microprocesadores /microcontroladores de ARM. Explique alguna de sus diferencias características. 
+Los perfiles son líneas de productos, orientadas a determinados mercados o soluciones. Tienen que ver con el rendimiento esperado, y se deben elegir según la aplicación requerida. Los tres perfiles de ARM son los cortex A, cortex R y cortex M.
+Cortex A: línea orientada a aplicaciones (corren en un SO de propósito general, como Android).  Procesadores de alto rendimiento orientados a la implementación de SO en SE de alta performance (optimizados para correr aplicaciones de usuario en un SO multitarea). Pueden procesar muchas cosas al mismo tiempo, pero es un procesamiento no determinista (pueden existir demoras). No es adecuado para aplicaciones en RT.
+Cortex R: línea orientada a tiempo real. Procesadores orientados a sistemas de RT donde la necesidad principal es implementar soluciones de baja latencia y alta capacidad de procesamiento. Ejemplos: sistemas del automóvil (seguridad, frenado, etc.), sistemas médicos, industriales, etc.
+El cortex R es como un cortex A (alta capacidad de procesamiento) pero sin la capacidad de hacer que las aplicaciones corran rápido. Es un procesador potente pero orientado a correr aplicaciones de RT (baja latencia y alta capacidad de procesamiento). No tienen memoria caché.
+Cortex M: línea orientada a microcontroladores. Procesadores orientados a dispositivos de consumo masivo y sistemas embebidos compactos (diseñados para alta densidad de código y programación en C).
+Comparado con un cortex M, un cortex A tiene mucha más capacidad de procesamiento, pero tiene mucho mayor consumo y costo. Los cortex M ya vienen con memoria, flash, periféricos internos. Los cortex A no.

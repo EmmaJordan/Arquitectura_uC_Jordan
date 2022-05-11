@@ -6,7 +6,7 @@ RT: tiempo real, la aplicación asegura cumplir los dead lines. Esa garantía la
 
 Preguntas orientadoras
 
-1. Describa brevemente los diferentes perfiles de familias de microprocesadores/microcontroladores de ARM. Explique alguna de sus diferencias características. 
+1. 	Describa brevemente los diferentes perfiles de familias de microprocesadores/microcontroladores de ARM. Explique alguna de sus diferencias características. 
 
 Los perfiles son líneas de productos, orientadas a determinados mercados o soluciones. Tienen que ver con el rendimiento esperado, y se deben elegir según 
 la aplicación requerida. Los tres perfiles de ARM son los cortex A, cortex R y cortex M.
@@ -26,7 +26,7 @@ consumo y costo. Los cortex M ya vienen con memoria, flash, periféricos interno
 
 Cortex M
 
-1. Describa brevemente las diferencias entre las familias de procesadores Cortex M0, M3 y M4
+1. 	Describa brevemente las diferencias entre las familias de procesadores Cortex M0, M3 y M4
 
 Cortex M0: posee arquitectura ARMv6-M y arquitectura de memoria Von-Neumann (bus único). No posee MPU. Admite sólo instrucciones de 32 bits y no soporta 
 todo el set de instrucciones Thumb. Presenta una implementación mínima de bajo costo para aplicaciones sencillas que requieren bajo consumo.
@@ -37,4 +37,10 @@ y capacidades de protección a memoria. El set de instrucciones más extenso per
 Cortex M4: posee arquitectura ARMv7E-M y arquitectura Harvard. Admite instrucciones hasta 64 bits y soporta Thumb. Tiene posibilidad de agregar memoria 
 caché al CPU. Respecto a M3, el set de instrucciones es más extenso y los co-procesadores son más potentes, permitiendo procesamiento digital de señales (DSP) 
 y operaciones de punto flotante (FPU).
+
+4.	¿Cómo es el mapa de memoria de la familia? 
+
+El mapa de memoria de los Cortex M es plano de 4GB. Presenta secciones definidas para el programa, la memoria RAM, los periféricos, etc. Cada sección comienza 
+en un determinado lugar de la memoria representado con un offset.
+
 

@@ -43,4 +43,10 @@ y operaciones de punto flotante (FPU).
 El mapa de memoria de los Cortex M es plano de 4GB. Presenta secciones definidas para el programa, la memoria RAM, los periféricos, etc. Cada sección comienza 
 en un determinado lugar de la memoria representado con un offset.
 
+18.	¿Qué funciones cumple la unidad de protección de memoria (MPU)? 
+
+El MPU permite definir y controlar el acceso a determinadas regiones de memoria, asignadas a distintos programas. Para esto diferencia regiones privilegiadas y no 
+privilegiadas. De este modo un programa no puede afectar el funcionamiento del resto del sistema, ya sea por un error de programación o de manera mal intencionada.
+
+
 

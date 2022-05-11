@@ -23,3 +23,18 @@ pero orientado a correr aplicaciones de RT (baja latencia y alta capacidad de pr
 Cortex M: línea orientada a microcontroladores. Procesadores orientados a dispositivos de consumo masivo y sistemas embebidos compactos (diseñados para 
 alta densidad de código y programación en C). Comparado con un cortex M, un cortex A tiene mucha más capacidad de procesamiento, pero tiene mucho mayor 
 consumo y costo. Los cortex M ya vienen con memoria, flash, periféricos internos. Los cortex A no.
+
+Cortex M
+
+1. Describa brevemente las diferencias entre las familias de procesadores Cortex M0, M3 y M4
+
+Cortex M0: posee arquitectura ARMv6-M y arquitectura de memoria Von-Neumann (bus único). No posee MPU. Admite sólo instrucciones de 32 bits y no soporta 
+todo el set de instrucciones Thumb. Presenta una implementación mínima de bajo costo para aplicaciones sencillas que requieren bajo consumo.
+
+Cortex M3: posee arquitectura ARMv7-M y arquitectura Harvard (más rápida). Admite instrucciones hasta 64 bits y soporta Thumb. Presentan mayor performance 
+y capacidades de protección a memoria. El set de instrucciones más extenso permite operaciones más avanzadas y eficientes, tales como la división por hardware.
+
+Cortex M4: posee arquitectura ARMv7E-M y arquitectura Harvard. Admite instrucciones hasta 64 bits y soporta Thumb. Tiene posibilidad de agregar memoria 
+caché al CPU. Respecto a M3, el set de instrucciones es más extenso y los co-procesadores son más potentes, permitiendo procesamiento digital de señales (DSP) 
+y operaciones de punto flotante (FPU).
+

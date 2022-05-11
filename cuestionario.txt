@@ -43,6 +43,13 @@ y operaciones de punto flotante (FPU).
 El mapa de memoria de los Cortex M es plano de 4GB. Presenta secciones definidas para el programa, la memoria RAM, los periféricos, etc. Cada sección comienza 
 en un determinado lugar de la memoria representado con un offset.
 
+17.	¿Qué es el systick? ¿Por qué puede afirmarse que su implementación favorece la portabilidad de los sistemas operativos embebidos? 
+
+El systick es un timer en el procesador, que genera una interrupción constante con una periodicidad de 1ms. Permite medir tiempos, así como también asignar tareas 
+dentro de su rutina de interrupción asociada. En base a este tiempo, se pueden gestionar cambios entre una y otra tarea en ejecución. 
+Su implementación favorece la portabilidad de los SO embebidos ya que todos los microcontroladores, de cualquier fabricante, con licencia de núcleo ARM, tienen 
+este mismo timer en el procesador, por lo que se fomenta su buen uso en lugar de un timer externo.
+
 18.	¿Qué funciones cumple la unidad de protección de memoria (MPU)? 
 
 El MPU permite definir y controlar el acceso a determinadas regiones de memoria, asignadas a distintos programas. Para esto diferencia regiones privilegiadas y no 

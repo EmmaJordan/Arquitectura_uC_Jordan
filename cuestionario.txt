@@ -38,6 +38,11 @@ Cortex M4: posee arquitectura ARMv7E-M y arquitectura Harvard. Admite instruccio
 caché al CPU. Respecto a M3, el set de instrucciones es más extenso y los co-procesadores son más potentes, permitiendo procesamiento digital de señales (DSP) 
 y operaciones de punto flotante (FPU).
 
+2.	¿Por qué se dice que el set de instrucciones Thumb permite mayor densidad de código? Explique. 
+
+Se dice que el set de instrucciones Thumb permite mayor densidad de código porque permite ejecutar las mismas tareas empleando un tamaño de programa menor. 
+Esto reduce tanto el costo como el consumo de energía.
+
 4.	¿Cómo es el mapa de memoria de la familia? 
 
 El mapa de memoria de los Cortex M es plano de 4GB. Presenta secciones definidas para el programa, la memoria RAM, los periféricos, etc. Cada sección comienza 

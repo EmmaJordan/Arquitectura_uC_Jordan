@@ -43,6 +43,15 @@ y operaciones de punto flotante (FPU).
 Se dice que el set de instrucciones Thumb permite mayor densidad de código porque permite ejecutar las mismas tareas empleando un tamaño de programa menor. 
 Esto reduce tanto el costo como el consumo de energía.
 
+3.	¿Qué entiende por arquitectura load-store? ¿Qué tipo de instrucciones no posee este tipo de arquitectura?
+
+En una arquitectura load-store, el set de instrucciones se divide en dos tipos: de acceso a memoria (load y store entre memoria y registros) y de operaciones de la 
+ALU (sólo entre registros). Un ejemplo de arquitectura con este modelo es el x86. En la primera, se cargan datos desde la memoria a los registros internos del 
+procesador (lectura) y también desde estos registros hacia la memoria (escritura). En la segunda, se tiene como operandos sólo registros del procesador, por lo 
+que, para ejecutar operaciones entre posiciones de memoria primero se deben cargar éstas en los registros del procesador.
+Esta arquitectura no posee instrucciones que realicen operaciones entre un registro y un elemento en memoria (no permite ejecutar operaciones de la ALU 
+directamente en memoria).
+
 4.	¿Cómo es el mapa de memoria de la familia? 
 
 El mapa de memoria de los Cortex M es plano de 4GB. Presenta secciones definidas para el programa, la memoria RAM, los periféricos, etc. Cada sección comienza 

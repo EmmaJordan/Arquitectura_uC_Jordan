@@ -73,6 +73,12 @@ Pop: copia el valor de la posición anterior a la posición apuntada por la pila
 El stack pointer tiene otras funciones como swap, peek, duplicate y rotate. Por ejemplo, en swap se intercambian las posiciones de los últimos dos valores de la pila, 
 en peek se recupera el próximo valor del stack en un registro (similar a pop, pero sin incrementar el puntero a la siguiente posición disponible), etc. 
 
+12.	¿Qué entiende por “core peripherals”? ¿Qué diferencia existe entre estos y el resto de los periféricos? 
+
+Son los periféricos diseñados e implementados por el fabricante del núcleo (ARM). A diferencia del resto de los periféricos, estos se encuentran físicamente en el 
+núcleo del procesador, por lo que son de baja latencia (ejemplo SysTick, MPU, NVIC). Cualquier fabricante de microcontroladores con núcleo ARM (ejemplo ST) 
+tendrá dichos periféricos embebidos en el core, además de los periféricos externos al mismo que decida incluir en su diseño.
+
 17.	¿Qué es el systick? ¿Por qué puede afirmarse que su implementación favorece la portabilidad de los sistemas operativos embebidos? 
 
 El systick es un timer en el procesador, que genera una interrupción constante con una periodicidad de 1ms. Permite medir tiempos, así como también asignar tareas 

@@ -3,6 +3,7 @@ Glosario
 SO: sistema operativo
 SE: sistema embebido
 RT: tiempo real, la aplicación asegura cumplir los dead lines. Esa garantía la da el SO y el procesador.
+ALU: unidad aritmético lógica
 
 Preguntas orientadoras
 
@@ -63,6 +64,14 @@ En un modelo de registros ortogonal, todos los registros (excepto stack pointer,
 instrucciones. Las instrucciones no operan sobre registros específicos, si no que existe un grupo de registros de propósito general en el cual todas las instrucciones 
 pueden operar. En los Cortex M3 y M4, existen 13 registros de propósito general (r0 a r12) en donde pueden operar las instrucciones de AND, ADD, MOV, etc. sobre 
 cualquier registro. Por ejemplo, la suma entre los registros r9 y r11: ADD r9, r11.
+
+10.	Describa las funciones principales de la pila. ¿Cómo resuelve la arquitectura el llamado a funciones y su retorno?
+
+Push: copia el valor de un registro en la posición apuntada por la pila. Luego el puntero apunta a la siguiente posición disponible (siguiente posición más baja en el 
+mapa de memoria).
+Pop: copia el valor de la posición anterior a la posición apuntada por la pila en un registro. Luego el puntero apunta a la siguiente posición disponible en la pila.
+El stack pointer tiene otras funciones como swap, peek, duplicate y rotate. Por ejemplo, en swap se intercambian las posiciones de los últimos dos valores de la pila, 
+en peek se recupera el próximo valor del stack en un registro (similar a pop, pero sin incrementar el puntero a la siguiente posición disponible), etc. 
 
 17.	¿Qué es el systick? ¿Por qué puede afirmarse que su implementación favorece la portabilidad de los sistemas operativos embebidos? 
 

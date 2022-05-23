@@ -79,6 +79,11 @@ Son los periféricos diseñados e implementados por el fabricante del núcleo (A
 núcleo del procesador, por lo que son de baja latencia (ejemplo SysTick, MPU, NVIC). Cualquier fabricante de microcontroladores con núcleo ARM (ejemplo ST) 
 tendrá dichos periféricos embebidos en el core, además de los periféricos externos al mismo que decida incluir en su diseño.
 
+13.	¿Cómo se implementan las prioridades de las interrupciones? Dé un ejemplo.
+
+Las interrupciones se implementan sobre un arreglo, con mayor prioridad a menor índice. La prioridad de las interrupciones se puede elegir, excepto para reset, 
+NMI y HardFault, cuyas posiciones en el arreglo son fijas. Por ejemplo, la interrupción con mayor prioridad será la ubicada en el primer lugar del arreglo (índice 0).
+
 17.	¿Qué es el systick? ¿Por qué puede afirmarse que su implementación favorece la portabilidad de los sistemas operativos embebidos? 
 
 El systick es un timer en el procesador, que genera una interrupción constante con una periodicidad de 1ms. Permite medir tiempos, así como también asignar tareas 

@@ -84,6 +84,13 @@ tendrá dichos periféricos embebidos en el core, además de los periféricos ex
 Las interrupciones se implementan sobre un arreglo, con mayor prioridad a menor índice. La prioridad de las interrupciones se puede elegir, excepto para reset, 
 NMI y HardFault, cuyas posiciones en el arreglo son fijas. Por ejemplo, la interrupción con mayor prioridad será la ubicada en el primer lugar del arreglo (índice 0).
 
+14.	¿Qué es el CMSIS? ¿Qué función cumple? ¿Quién lo provee? ¿Qué ventajas aporta? 
+
+El CMSIS es una interfaz de software común a todos los microprocesadores Cortex, implementada en C. Le permite al programador el acceso a los core peripherals 
+de manera más amigable, sin tener que interactuar de manera directa con los registros del microcontrolador. Se ubica entre la capa de middleware y el hardware. 
+Permite poner a andar los periféricos internos en poco tiempo y con el respaldo del fabricante del microcontrolador, quien lo provee, con documentación 
+respaldatoria del mismo y de toda una comunidad de usuarios.
+
 17.	¿Qué es el systick? ¿Por qué puede afirmarse que su implementación favorece la portabilidad de los sistemas operativos embebidos? 
 
 El systick es un timer en el procesador, que genera una interrupción constante con una periodicidad de 1ms. Permite medir tiempos, así como también asignar tareas 

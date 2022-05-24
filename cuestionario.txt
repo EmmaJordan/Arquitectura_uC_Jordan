@@ -67,9 +67,10 @@ cualquier registro. Por ejemplo, la suma entre los registros r9 y r11: ADD r9, r
 
 10.	Describa las funciones principales de la pila. ¿Cómo resuelve la arquitectura el llamado a funciones y su retorno?
 
-Push: copia el valor de un registro en la posición apuntada por la pila. Luego el puntero apunta a la siguiente posición disponible (siguiente posición más baja en el 
-mapa de memoria).
-Pop: copia el valor de la posición anterior a la posición apuntada por la pila en un registro. Luego el puntero apunta a la siguiente posición disponible en la pila.
+• Push: copia el valor de un registro en la posición inferior a la apuntada por la pila (se decrementa). Luego el puntero queda en esa posición.
+• Pop: copia el valor de la posición apuntada por la pila en un registro. Luego el puntero se vuelve a la posición superior (se incrementa) disponible en la pila.
+Nota: la pila crece hacia abajo.
+
 El stack pointer tiene otras funciones como swap, peek, duplicate y rotate. Por ejemplo, en swap se intercambian las posiciones de los últimos dos valores de la pila, 
 en peek se recupera el próximo valor del stack en un registro (similar a pop, pero sin incrementar el puntero a la siguiente posición disponible), etc. 
 

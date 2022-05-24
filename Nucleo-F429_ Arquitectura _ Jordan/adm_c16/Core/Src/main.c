@@ -129,8 +129,10 @@ static void PrivilegiosSVC (void)
   */
 void zeros(uint32_t *vector, uint32_t longitud)
 {
-	for(int i = 0; i<longitud; ++i){
-		vector[i] = (uint32_t) 0;
+	while(longitud)
+	{
+		vector[longitud] = 0;
+		longitud--;
 	}
 }
 

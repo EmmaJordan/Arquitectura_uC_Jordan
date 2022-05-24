@@ -50,8 +50,8 @@ En una arquitectura load-store, el set de instrucciones se divide en dos tipos: 
 ALU (sólo entre registros). Un ejemplo de arquitectura con este modelo es el x86. En la primera, se cargan datos desde la memoria a los registros internos del 
 procesador (lectura) y también desde estos registros hacia la memoria (escritura). En la segunda, se tiene como operandos sólo registros del procesador, por lo 
 que, para ejecutar operaciones entre posiciones de memoria primero se deben cargar éstas en los registros del procesador.
-Esta arquitectura no posee instrucciones que realicen operaciones entre un registro y un elemento en memoria (no permite ejecutar operaciones de la ALU 
-directamente en memoria).
+En resumen, ninguna instrucción opera directamente sobre memoria, por lo que para acceder u operar sobre un valor en memoria, primero se lo debe cargar en 
+un registro, y luego se lo debe guardar en un registro para pasarlo nuevamente a memoria.
 
 4.	¿Cómo es el mapa de memoria de la familia? 
 

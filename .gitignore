@@ -5,6 +5,8 @@
 
 #stm32cubeide
 .metadata
+.bin
+.list
 
 # Prerequisites
 *.d

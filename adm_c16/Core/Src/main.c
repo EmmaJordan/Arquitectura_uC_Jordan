@@ -164,13 +164,13 @@ void productoEscalar16(uint16_t *vectorIn, uint16_t *vectorOut, uint32_t longitu
 
 void productoEscalar12(uint16_t *vectorIn, uint16_t *vectorOut, uint32_t longitud, uint16_t escalar)
 {
-	for(int i = 0; i<longitud; ++i)
+	while(longitud--)
 	{
-		vectorOut[i] = vectorIn[i] * escalar;
-		if(vectorOut[i] > (uint16_t) 0x0FFF)
-		{
-			vectorOut[i] = (uint16_t) 0x0FFF;
-		}
+	vectorOut[longitud] = vectorIn[longitud] * escalar;
+	if(vectorOut[longitud] > (uint16_t) 0x0FFF)
+	{
+		vectorOut[longitud] = (uint16_t) 0x0FFF;
+	}
 	}
 }
 /**
@@ -212,7 +212,8 @@ int main(void)
   /* USER CODE END 2 */
   uint32_t miLongitud = 10;
   uint32_t miEscalar1  = 10;
-  uint32_t miEscalar2  = 1000;
+  uint32_t miEscalar2  = 100;
+  uint32_t miEscalar3  = 1000;
   uint32_t miArreglo32[miLongitud];
   uint16_t miArreglo16[miLongitud];
   //uint32_t miArreglo4[miLongitud];
@@ -223,6 +224,7 @@ int main(void)
 
   productoEscalar32(miArreglo32,miArreglo32,miLongitud,miEscalar1);
   productoEscalar16(miArreglo16,miArreglo16,miLongitud,miEscalar2);
+  productoEscalar12(miArreglo16,miArreglo16,miLongitud,miEscalar3);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   char miChar = 'a';

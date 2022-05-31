@@ -166,11 +166,11 @@ void productoEscalar12(uint16_t *vectorIn, uint16_t *vectorOut, uint32_t longitu
 {
 	while(longitud--)
 	{
-	vectorOut[longitud] = vectorIn[longitud] * escalar;
-	if(vectorOut[longitud] > (uint16_t) 0x0FFF)
-	{
-		vectorOut[longitud] = (uint16_t) 0x0FFF;
-	}
+		vectorOut[longitud] = vectorIn[longitud] * escalar;
+		if(vectorOut[longitud] > (uint16_t) 0x0FFF)
+		{
+			vectorOut[longitud] = (uint16_t) 0x0FFF;
+		}
 	}
 }
 /**
@@ -211,9 +211,9 @@ int main(void)
   //const uint32_t Resultado = asm_sum (5, 3);
   /* USER CODE END 2 */
   uint32_t miLongitud = 10;
-  uint32_t miEscalar1  = 10;
-  uint32_t miEscalar2  = 100;
-  uint32_t miEscalar3  = 1000;
+  uint32_t miEscalar1  = 3;
+  uint32_t miEscalar2  = 10;
+  uint32_t miEscalar3  = 100;
   uint32_t miArreglo32[miLongitud];
   uint16_t miArreglo16[miLongitud];
   //uint32_t miArreglo4[miLongitud];

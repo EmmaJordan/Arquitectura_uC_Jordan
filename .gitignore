@@ -1,5 +1,7 @@
 #eclipse
 .metadata
+.bin
+.list
 
 #stm32cubeide
 .metadata

@@ -108,13 +108,18 @@ ISA
 
 1. ¿Qué son los sufijos y para qué se los utiliza? Dé un ejemplo 
 
+Los sufijos son modificadores opcionales para las instrucciones, utilizados para que éstas realicen otras tareas adicionales, tales como corrimiento de bits, desplazamientos, 
+acciones sobre el flag de estado, etc. Por ejemplo, al agregarle el sufijo sb a la instrucción ldr (load register), lo que hace ldrsb es, además de cargar el valor de memoria a 
+registro, completar bits superiores a 8 bits con bit de signo (los 24 bits superiores con 1) para mantener el signo al pasar de 8 a 32 bits.
+
 2. ¿Para qué se utiliza el sufijo ‘s’? Dé un ejemplo
 
 El sufijo 's' se utiliza para actualizar los flags de estado. Por ejemplo, la instrucción “adds ro, r1” lo que hace es ro = ro+r1 y actualizar el flag de estado.
 
 3. ¿Qué utilidad tiene la implementación de instrucciones de aritmética saturada? Dé un ejemplo con operaciones con datos de 8 bits.
 
-4. Describa brevemente la interfaz entre assembler y C ¿Cómo se reciben los argumentos de funciones? ¿Cómo se devuelve el resultado? ¿Qué registros deben guardarse en la pila antes de ser modificados? 
+4. Describa brevemente la interfaz entre assembler y C ¿Cómo se reciben los argumentos de funciones? ¿Cómo se devuelve el resultado? 
+¿Qué registros deben guardarse en la pila antes de ser modificados? 
 
 
 

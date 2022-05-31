@@ -132,11 +132,19 @@ void zeros(uint32_t *vector, uint32_t longitud)
 	}
 }
 
+void llenaArreglo(uint32_t *vectorOut, uint32_t longitud)
+{
+	while(longitud--)
+	{
+		vectorOut[longitud] = longitud;
+	}
+}
+
 void productoEscalar32(uint32_t *vectorIn, uint32_t *vectorOut, uint32_t longitud, uint32_t escalar)
 {
-	for(int i = 0; i<longitud; ++i)
+	while(longitud--)
 	{
-		vectorOut[i] = vectorIn[i] * escalar;
+		vectorOut[longitud] = vectorIn[longitud] * escalar;
 	}
 }
 
@@ -196,10 +204,16 @@ int main(void)
 
   //const uint32_t Resultado = asm_sum (5, 3);
   /* USER CODE END 2 */
-  uint32_t sizeArreglo = 10;
-  uint32_t miArreglo[sizeArreglo];
+  uint32_t miLongitud = 10;
+  uint32_t miEscalar  = 10;
+  uint32_t miArreglo1[miLongitud];
+  uint32_t miArreglo2[miLongitud];
+  //uint32_t miArreglo3[miLongitud];
+  //uint32_t miArreglo4[miLongitud];
 
-  zeros(miArreglo,sizeArreglo);
+  zeros(miArreglo1,miLongitud);
+  llenaArreglo(miArreglo1,miLongitud);
+  productoEscalar32(miArreglo1,miArreglo2,miLongitud,miEscalar);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   char miChar = 'a';

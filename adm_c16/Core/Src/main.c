@@ -228,6 +228,8 @@ int main(void)
 
   productoEscalar16(miArreglo16,miArreglo16,miLongitud,miEscalar2);
 
+  asm_productoEscalar16(miArreglo16,miArreglo16,miLongitud,miEscalar2);
+
   productoEscalar12(miArreglo16,miArreglo16,miLongitud,miEscalar3);
 
 

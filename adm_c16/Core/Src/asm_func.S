@@ -7,7 +7,7 @@
 .global asm_sum
 .global asm_zeros
 .global asm_productoEscalar32
-//.global asm_productoEscalar16
+.global asm_productoEscalar16
 //.global asm_productoEscalar12
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -86,16 +86,51 @@
     push {r5}
 	push {r6}
 
-    .loop1:
+    .loop32:
     	ldr	r5, [r0], 4 	@carga un registro r5 con un valor de memoria y luego r0+=4;
     						@es decir, carga en r5 con lo que hay que r0 (*vectorIn) e incrementa el puntero de vectorIn
     	mul r6, r5, r3  	@multiplica r5 por r3 (escalar) y lo guarda en r6
 		str r6, [r1], 4 	@carga en memoria r1 lo que tengo en r6 y luego r1+=4;
 							@es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
     	subs r2, 1      	@decrementa en 1 a r2 (longitud--)
-        bne	.loop1			@vuelve a .loop32
+        bne	.loop32			@vuelve a .loop32
 
-        pop {r6}  //agregado
-        pop {r5}  //agregado
+        pop {r6}
+        pop {r5}
+
+        bx lr
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@ void asm_productoEscalar16(uint16_t * vectorIn, uint16_t * vectorOut, uint32_t longitud, uint16_t escalar);
+@
+@ Parametros recibidos:
+@   r0: * vectorIn
+@   r1: * vectorOut
+@	r2: longitud
+@	r3: escalar
+@
+@ Valor de retorno:
+@   Ninguno
+@
+.thumb_func
+
+    asm_productoEscalar16:
+
+    push {r8}
+	push {r9}
+
+    .loop16:
+    	ldr	r8, [r0], 4 	@carga un registro r8 con un valor de memoria y luego r0+=4;
+    						@es decir, carga en r8 con lo que hay que r0 (*vectorIn) e incrementa el puntero de vectorIn
+    	mul r9, r8, r3  	@multiplica r8 por r3 (escalar) y lo guarda en r6
+		str r9, [r1], 4 	@carga en memoria r1 lo que tengo en r6 y luego r1+=4;
+							@es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
+    	subs r2, 1      	@decrementa en 1 a r2 (longitud--)
+        bne	.loop16			@vuelve a .loop16
+
+        pop {r9}
+        pop {r8}
 
         bx lr

@@ -122,21 +122,27 @@ static void PrivilegiosSVC (void)
     // Fin del ejemplo de SVC
 }
 /* USER CODE END 0 */
+void llenaArreglo32(uint32_t *vectorOut, uint32_t longitud)
+{
+	while(longitud--)
+	{
+		vectorOut[longitud] = longitud;
+	}
+}
 
+void llenaArreglo16(uint16_t *vectorOut, uint32_t longitud)
+{
+	while(longitud--)
+	{
+		vectorOut[longitud] = longitud;
+	}
+}
 //Recorro el arreglo de atrás hacia adelante
 void zeros(uint32_t *vector, uint32_t longitud)
 {
 	while(longitud--)
 	{
 		vector[longitud] = 0;
-	}
-}
-
-void llenaArreglo(uint32_t *vectorOut, uint32_t longitud)
-{
-	while(longitud--)
-	{
-		vectorOut[longitud] = longitud;
 	}
 }
 
@@ -150,9 +156,9 @@ void productoEscalar32(uint32_t *vectorIn, uint32_t *vectorOut, uint32_t longitu
 
 void productoEscalar16(uint16_t *vectorIn, uint16_t *vectorOut, uint32_t longitud, uint16_t escalar)
 {
-	for(int i = 0; i<longitud; ++i)
+	while(longitud--)
 	{
-		vectorOut[i] = vectorIn[i] * escalar;
+		vectorOut[longitud] = vectorIn[longitud] * escalar;
 	}
 }
 
@@ -205,15 +211,18 @@ int main(void)
   //const uint32_t Resultado = asm_sum (5, 3);
   /* USER CODE END 2 */
   uint32_t miLongitud = 10;
-  uint32_t miEscalar  = 10;
-  uint32_t miArreglo1[miLongitud];
-  uint32_t miArreglo2[miLongitud];
-  //uint32_t miArreglo3[miLongitud];
+  uint32_t miEscalar1  = 10;
+  uint32_t miEscalar2  = 1000;
+  uint32_t miArreglo32[miLongitud];
+  uint16_t miArreglo16[miLongitud];
   //uint32_t miArreglo4[miLongitud];
 
-  zeros(miArreglo1,miLongitud);
-  llenaArreglo(miArreglo1,miLongitud);
-  productoEscalar32(miArreglo1,miArreglo2,miLongitud,miEscalar);
+  zeros(miArreglo32,miLongitud);
+  llenaArreglo32(miArreglo32,miLongitud);
+  llenaArreglo16(miArreglo16,miLongitud);
+
+  productoEscalar32(miArreglo32,miArreglo32,miLongitud,miEscalar1);
+  productoEscalar16(miArreglo16,miArreglo16,miLongitud,miEscalar2);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   char miChar = 'a';

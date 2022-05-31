@@ -104,5 +104,18 @@ este mismo timer en el procesador, por lo que se fomenta su buen uso en lugar de
 El MPU permite definir y controlar el acceso a determinadas regiones de memoria, asignadas a distintos programas. Para esto diferencia regiones privilegiadas y no 
 privilegiadas. De este modo un programa no puede afectar el funcionamiento del resto del sistema, ya sea por un error de programación o de manera mal intencionada.
 
+ISA
+
+1. ¿Qué son los sufijos y para qué se los utiliza? Dé un ejemplo 
+
+2. ¿Para qué se utiliza el sufijo ‘s’? Dé un ejemplo
+
+El sufijo 's' se utiliza para actualizar los flags de estado. Por ejemplo, la instrucción “adds ro, r1” lo que hace es ro = ro+r1 y actualizar el flag de estado.
+
+3. ¿Qué utilidad tiene la implementación de instrucciones de aritmética saturada? Dé un ejemplo con operaciones con datos de 8 bits.
+
+4. Describa brevemente la interfaz entre assembler y C ¿Cómo se reciben los argumentos de funciones? ¿Cómo se devuelve el resultado? ¿Qué registros deben guardarse en la pila antes de ser modificados? 
+
+
 
 

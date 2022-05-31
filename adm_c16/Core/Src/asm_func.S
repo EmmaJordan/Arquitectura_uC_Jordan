@@ -81,20 +81,21 @@
 @
 .thumb_func
 
-	push {r9} //agregado
-	push {r10} //agregado
-
     asm_productoEscalar32:
-    .loop32:
-    	ldr	r9, [r0], 4 //carga un registro con un valor de memoria y luego r0+=4;
-    					//carga r9 con lo que hay que r0 (*vectorIn) e incrementar el puntero en vectorIn
-    	mul r10, r9, r3  //multiplica r9 por r3 (escalar) y lo guarda en r10
-		str r10, [r1], 4 //carga en memoria lo que tengo en r10 y luego r1+=4;
-						//carga en r1 vectorIn[0]*escalar e incrementa el puntero en vectorOut
-    	subs r2, 1          @ --longitud
-        bne	.loop32
 
-        pop {r9} //agregado
-        pop {r10} //agregado
+    push {r5}
+	push {r6}
+
+    .loop1:
+    	ldr	r5, [r0], 4 	@carga un registro r5 con un valor de memoria y luego r0+=4;
+    						@es decir, carga en r5 con lo que hay que r0 (*vectorIn) e incrementa el puntero de vectorIn
+    	mul r6, r5, r3  	@multiplica r5 por r3 (escalar) y lo guarda en r6
+		str r6, [r1], 4 	@carga en memoria r1 lo que tengo en r6 y luego r1+=4;
+							@es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
+    	subs r2, 1      	@decrementa en 1 a r2 (longitud--)
+        bne	.loop1			@vuelve a .loop32
+
+        pop {r6}  //agregado
+        pop {r5}  //agregado
 
         bx lr

@@ -5,7 +5,10 @@
 @ Simbolos exportados
 .global asm_svc
 .global asm_sum
-
+.global asm_zeros
+.global asm_productoEscalar32
+//.global asm_productoEscalar16
+//.global asm_productoEscalar12
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -43,3 +46,47 @@
         @ bx lr
         @ push {lr} ... pop {pc}
 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@   void asm_zeros (uint32_t *vector, uint32_t longitud);
+@
+@ Parametros recibidos:
+@   r0: *vector
+@   r1: longitud
+@
+.thumb_func
+    asm_zeros:
+        @ Registros usados
+        @   r2: valor cero
+        mov r2, 0           @ constante cero
+    .asm_zeros_loop:
+        str r2, [r0], 4     @ sizeof(uint32_t) == 4, *vector++ = r2. //str carga en memoria el valor de un registro
+        subs r1, 1          @ --longitud
+        bne .asm_zeros_loop
+        bx lr
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@ void productoEscalar32(uint32_t * vectorIn, uint32_t * vectorOut, uint32_t longitud, uint32_t escalar);
+@
+@ Parametros recibidos:
+@   r0: * vectorIn
+@   r1: * vectorOut
+@	r2: longitud
+@	r3: escalar
+@
+@ Valor de retorno:
+@   Ninguno
+@
+.thumb_func
+    asm_productoEscalar32:
+    .loop1:
+    	ldr	r5, [r0], 4 //carga un registro con un valor de memoria y luego r0+=4;
+    					//carga r5 con lo que hay que r0 (*vectorIn) e incrementar el puntero en vectorIn
+    	mul r6, r5, r3  //multiplica r5 por r3 (escalar) y lo guarda en r6
+		str r6, [r1], 4 //carga en memoria lo que tengo en r6 y luego r1+=4;
+						//carga en r1 vectorIn[0]*escalar e incrementa el puntero en vectorOut
+    	subs r2, 1          @ --longitud
+        bne	.loop1
+        bx lr

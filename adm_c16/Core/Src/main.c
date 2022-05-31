@@ -19,7 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "string.h"
-#include <stdio.h>
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "asm_func.h"
@@ -223,8 +223,14 @@ int main(void)
   llenaArreglo16(miArreglo16,miLongitud);
 
   productoEscalar32(miArreglo32,miArreglo32,miLongitud,miEscalar1);
+
+  asm_productoEscalar32(miArreglo32,miArreglo32,miLongitud,miEscalar1);
+
   productoEscalar16(miArreglo16,miArreglo16,miLongitud,miEscalar2);
+
   productoEscalar12(miArreglo16,miArreglo16,miLongitud,miEscalar3);
+
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   char miChar = 'a';
@@ -355,10 +361,10 @@ static void MX_USART3_UART_Init(void)
   huart3.Init.OverSampling = UART_OVERSAMPLING_16;
   if (HAL_UART_Init(&huart3) != HAL_OK)
   {
-	printf("UART ERROR\r\n");
+	//printf("UART ERROR\r\n");
     Error_Handler();
   }
-  printf("UART OK\r\n");
+  //printf("UART OK\r\n");
   /* USER CODE BEGIN USART3_Init 2 */
 
   /* USER CODE END USART3_Init 2 */

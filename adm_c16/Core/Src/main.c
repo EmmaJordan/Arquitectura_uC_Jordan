@@ -123,12 +123,12 @@ static void PrivilegiosSVC (void)
 }
 /* USER CODE END 0 */
 
+//Recorro el arreglo de atrás hacia adelante
 void zeros(uint32_t *vector, uint32_t longitud)
 {
-	while(longitud)
+	while(longitud--)
 	{
 		vector[longitud] = 0;
-		longitud--;
 	}
 }
 
@@ -196,7 +196,7 @@ int main(void)
 
   //const uint32_t Resultado = asm_sum (5, 3);
   /* USER CODE END 2 */
-  uint32_t sizeArreglo = 5;
+  uint32_t sizeArreglo = 10;
   uint32_t miArreglo[sizeArreglo];
 
   zeros(miArreglo,sizeArreglo);

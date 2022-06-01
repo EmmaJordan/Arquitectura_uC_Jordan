@@ -222,16 +222,18 @@ int main(void)
   llenaArreglo32(miArreglo32,miLongitud);
   llenaArreglo16(miArreglo16,miLongitud);
 
+  //32 bits
   productoEscalar32(miArreglo32,miArreglo32,miLongitud,miEscalar1);
-
   asm_productoEscalar32(miArreglo32,miArreglo32,miLongitud,miEscalar1);
 
+  //16bits
   productoEscalar16(miArreglo16,miArreglo16,miLongitud,miEscalar2);
-
   asm_productoEscalar16(miArreglo16,miArreglo16,miLongitud,miEscalar2);
 
-  productoEscalar12(miArreglo16,miArreglo16,miLongitud,miEscalar3);
-
+  //12 bits
+  llenaArreglo16(miArreglo16,miLongitud);
+  productoEscalar12(miArreglo16,miArreglo16,miLongitud,miEscalar2);
+  asm_productoEscalar12(miArreglo16,miArreglo16,miLongitud,miEscalar3);
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */

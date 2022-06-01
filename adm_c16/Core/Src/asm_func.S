@@ -8,7 +8,7 @@
 .global asm_zeros
 .global asm_productoEscalar32
 .global asm_productoEscalar16
-//.global asm_productoEscalar12
+.global asm_productoEscalar12
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -129,6 +129,42 @@
 							@es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
     	subs r2, 1      	@decrementa en 1 a r2 (longitud--)
         bne	.loop16			@vuelve a .loop16
+
+        pop {r9}
+        pop {r8}
+
+        bx lr
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@ void asm_productoEscalar12(uint16_t * vectorIn, uint16_t * vectorOut, uint32_t longitud, uint16_t escalar);
+@
+@ Parametros recibidos:
+@   r0: * vectorIn
+@   r1: * vectorOut
+@	r2: longitud
+@	r3: escalar
+@
+@ Valor de retorno:
+@   Ninguno
+@
+.thumb_func
+
+    asm_productoEscalar12:
+
+    push {r8}
+	push {r9}
+
+    .loop12:
+    	ldrh  	r8, [r0], 2 	@carga un registro r8 con un valor de memoria y luego r0+=2; <------
+    							@es decir, carga en r8 con lo que hay que r0 (*vectorIn) e incrementa el puntero de vectorIn
+    	mul 	r9, r8,  r3  	@multiplica r8 por r3 (escalar) y lo guarda en r9
+		usat 	r9, #12, r9    //AGREGADO SATURACIÓN a 12 bits
+		strh  	r9, [r1], 2 	@carga en memoria r1 lo que tengo en r9 y luego r1+=2; <----
+								@es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
+    	subs 	r2, 1      		@decrementa en 1 a r2 (longitud--)
+        bne		.loop12			@vuelve a .loop12
 
         pop {r9}
         pop {r8}

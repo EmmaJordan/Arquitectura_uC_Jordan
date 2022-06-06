@@ -128,6 +128,11 @@ Por ejemplo, en 8 bits, la multiplicación de dos enteros, si el resultado sobre
 4. Describa brevemente la interfaz entre assembler y C ¿Cómo se reciben los argumentos de funciones? ¿Cómo se devuelve el resultado? 
 ¿Qué registros deben guardarse en la pila antes de ser modificados? 
 
+Por convención, los argumentos de las funciones son recibidos en los primeros 4 registros de propósito general r0, r1, r2 y r3. Si la función presenta más de 4 parámetros, 
+serán recibidos en el stack, por lo que se los deberá acceder con instrucciones ldr. Luego, el retorno de la función es almacenado en el registro r0 si es de 32 bits, o en r0 +r1 
+si es de 64 bits. Por último, para poder regresar a la dirección de memoria correspondiente, se utiliza el link register, que almacena la dirección de la instrucción siguiente a 
+la función que se ha llamado actualmente.
+
 5. ¿Qué es una instrucción SIMD? ¿En qué se aplican y que ventajas reporta su uso? Dé un ejemplo.
 
 Una SIMD (Single Instruction Multiple Data) es una instrucción que realiza una misma operación sobre más de un dato. Su implementación permite llevar a cabo paralelismo 

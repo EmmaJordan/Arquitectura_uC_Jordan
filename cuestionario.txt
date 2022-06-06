@@ -114,7 +114,8 @@ registro, completar bits superiores a 8 bits con bit de signo (los 24 bits super
 
 2. ¿Para qué se utiliza el sufijo ‘s’? Dé un ejemplo
 
-El sufijo 's' se utiliza para actualizar los flags de estado. Por ejemplo, la instrucción “adds ro, r1” lo que hace es ro = ro+r1 y actualizar el flag de estado.
+El sufijo 's' se utiliza para actualizar los flags de estado. Esto implica que los flags N, Z, C y V son actualizados en base al resultado de la operación.
+Por ejemplo, la instrucción “adds ro, r1” lo que hace es ro = ro+r1 y actualizar el flag de estado.
 
 3. ¿Qué utilidad tiene la implementación de instrucciones de aritmética saturada? Dé un ejemplo con operaciones con datos de 8 bits.
 

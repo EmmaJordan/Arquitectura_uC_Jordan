@@ -121,7 +121,9 @@ Por ejemplo, la instrucción “adds ro, r1” lo que hace es ro = ro+r1 y actua
 
 La implementación de instrucciones de aritmética saturada permite “limitar” el resultado al máximo valor que se puede representar con el tipo de datos presente. Es decir, 
 si el resultado sobrepasara dicho valor máximo, ocurriría un overflow y se almacenaría un dato inválido. En ocasiones se prefiere saturar que obtener un dato que desbordó 
-y se aleja más de la realidad. Por ejemplo, en 8 bits, la multiplicación de dos enteros, si el resultado sobrepasa 255, lo satura a 255.
+y se aleja más de la realidad. Por ejemplo, al ajustar el nivel de volumen de una señal de sonido, alcanzar un valor de saturación causa menos distorsión que permitir un 
+desborde. Otra ventaja de estas instrucciones es que permiten implementar algoritmos más eficientes en el campo del procesamiento digital de señales (DSP). 
+Por ejemplo, en 8 bits, la multiplicación de dos enteros, si el resultado sobrepasa 255, lo satura a 255.
 
 4. Describa brevemente la interfaz entre assembler y C ¿Cómo se reciben los argumentos de funciones? ¿Cómo se devuelve el resultado? 
 ¿Qué registros deben guardarse en la pila antes de ser modificados? 

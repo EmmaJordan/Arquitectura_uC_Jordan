@@ -128,6 +128,9 @@ Por ejemplo, en 8 bits, la multiplicación de dos enteros, si el resultado sobre
 4. Describa brevemente la interfaz entre assembler y C ¿Cómo se reciben los argumentos de funciones? ¿Cómo se devuelve el resultado? 
 ¿Qué registros deben guardarse en la pila antes de ser modificados? 
 
+5. ¿Qué es una instrucción SIMD? ¿En qué se aplican y que ventajas reporta su uso? Dé un ejemplo.
 
+Una SIMD (Single Instruction Multiple Data) es una instrucción que realiza una misma operación sobre más de un dato. Su implementación permite llevar a cabo paralelismo 
+a nivel de datos.
 
 

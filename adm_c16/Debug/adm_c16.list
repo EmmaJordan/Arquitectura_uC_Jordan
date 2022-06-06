@@ -106,18 +106,20 @@ Disassembly of section .text:
     asm_zeros:
         @ Registros usados
         @   r2: valor cero
-        mov r2, 0           @ constante cero
+        mov r2, 0           @ constante cero en r2
  80001f4:	f04f 0200 	mov.w	r2, #0
 
 080001f8 <.asm_zeros_loop>:
     .asm_zeros_loop:
-        str r2, [r0], 4     @ sizeof(uint32_t) == 4, *vector++ = r2. //str carga en memoria el valor de un registro
+        str r2, [r0], 4    	@str carga en memoria el valor de un registro
  80001f8:	f840 2b04 	str.w	r2, [r0], #4
-        subs r1, 1          @ --longitud
+        					@carga en memoria (r0=*vector[0]) lo que tengo en r2 (0) y luego r0+=4 --> r0=*vector[1];
+        					@ sizeof(uint32_t) == 4, *vector++ = r2. //
+        subs r1, 1          @ r1-=1; longitud--; y actualiza flag de estado del procesador
  80001fc:	3901      	subs	r1, #1
-        bne .asm_zeros_loop
+        bne .asm_zeros_loop @vuelve a repetir el ciclo, con salto condicional (NE: not equal, flag Z=0), es decir mientras r1 no sea 0
  80001fe:	d1fb      	bne.n	80001f8 <.asm_zeros_loop>
-        bx lr
+        bx lr				@retorna link register
  8000200:	4770      	bx	lr
 
 08000202 <asm_productoEscalar32>:
@@ -134,17 +136,17 @@ Disassembly of section .text:
 08000206 <.loop32>:
 
     .loop32:
-    	ldr	r5, [r0], 4 	@carga un registro r5 con un valor de memoria y luego r0+=4;
+    	ldr	r5, [r0], 4 	@carga un registro r5 con un valor de memoria r0 y luego r0+=4;
  8000206:	f850 5b04 	ldr.w	r5, [r0], #4
-    						@es decir, carga en r5 con lo que hay que r0 (*vectorIn) e incrementa el puntero de vectorIn
+    						@es decir, carga en r5 lo que hay en r0 (*vectorIn) e incrementa el puntero de vectorIn
     	mul r6, r5, r3  	@multiplica r5 por r3 (escalar) y lo guarda en r6
  800020a:	fb05 f603 	mul.w	r6, r5, r3
 		str r6, [r1], 4 	@carga en memoria r1 lo que tengo en r6 y luego r1+=4;
  800020e:	f841 6b04 	str.w	r6, [r1], #4
 							@es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
-    	subs r2, 1      	@decrementa en 1 a r2 (longitud--)
+    	subs r2, 1      	@decrementa en 1 a r2 (longitud--)y actualiza flag de estado del procesador
  8000212:	3a01      	subs	r2, #1
-        bne	.loop32			@vuelve a .loop32
+        bne	.loop32			@vuelve a .loop32, ejecución condicional (Not Equal, es decir Z=0)
  8000214:	d1f7      	bne.n	8000206 <.loop32>
 
         pop {r6}
@@ -159,7 +161,7 @@ Disassembly of section .text:
 @
 .thumb_func
 
-    asm_productoEscalar16:
+    asm_productoEscalar16: //REVISAR, Carlos le puso ldrh y strh
 
     push {r8}
  800021c:	f84d 8d04 	str.w	r8, [sp, #-4]!
@@ -169,17 +171,17 @@ Disassembly of section .text:
 08000224 <.loop16>:
 
     .loop16:
-    	ldr	r8, [r0], 4 	@carga un registro r8 con un valor de memoria y luego r0+=4;
+    	ldr	r8, [r0], 4 	@carga un registro r8 con un valor de memoria r0 y luego r0+=4;
  8000224:	f850 8b04 	ldr.w	r8, [r0], #4
-    						@es decir, carga en r8 con lo que hay que r0 (*vectorIn) e incrementa el puntero de vectorIn
+    						@es decir, carga en r8 lo que hay en r0 (*vectorIn) e incrementa el puntero de vectorIn
     	mul r9, r8, r3  	@multiplica r8 por r3 (escalar) y lo guarda en r6
  8000228:	fb08 f903 	mul.w	r9, r8, r3
-		str r9, [r1], 4 	@carga en memoria r1 lo que tengo en r6 y luego r1+=4;
+		str r9, [r1], 4 	@carga en memoria r1 lo que tengo en r9 y luego r1+=4;
  800022c:	f841 9b04 	str.w	r9, [r1], #4
 							@es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
     	subs r2, 1      	@decrementa en 1 a r2 (longitud--)
  8000230:	3a01      	subs	r2, #1
-        bne	.loop16			@vuelve a .loop16
+        bne	.loop16			@vuelve a .loop16, ejecución condicional (Not Equal, es decir Z=0)
  8000232:	d1f7      	bne.n	8000224 <.loop16>
 
         pop {r9}
@@ -204,19 +206,19 @@ Disassembly of section .text:
 08000246 <.loop12>:
 
     .loop12:
-    	ldrh  	r8, [r0], 2 	@carga un registro r8 con un valor de memoria y luego r0+=2; <------
+    	ldrh  	r8, [r0], 2 	@carga un registro r8 con un valor de memoria r0 y luego r0+=2; <------
  8000246:	f830 8b02 	ldrh.w	r8, [r0], #2
-    							@es decir, carga en r8 con lo que hay que r0 (*vectorIn) e incrementa el puntero de vectorIn
+    							@es decir, carga en r8 lo que hay en r0 (*vectorIn) e incrementa el puntero de vectorIn
     	mul 	r9, r8,  r3  	@multiplica r8 por r3 (escalar) y lo guarda en r9
  800024a:	fb08 f903 	mul.w	r9, r8, r3
-		usat 	r9, #12, r9    //AGREGADO SATURACIÓN a 12 bits
+		usat 	r9, 12,  r9    //AGREGADO SATURACIÓN a 12 bits
  800024e:	f389 090c 	usat	r9, #12, r9
 		strh  	r9, [r1], 2 	@carga en memoria r1 lo que tengo en r9 y luego r1+=2; <----
  8000252:	f821 9b02 	strh.w	r9, [r1], #2
 								@es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
     	subs 	r2, 1      		@decrementa en 1 a r2 (longitud--)
  8000256:	3a01      	subs	r2, #1
-        bne		.loop12			@vuelve a .loop12
+        bne		.loop12			@vuelve a .loop12, ejecución condicional (Not Equal, es decir Z=0)
  8000258:	d1f5      	bne.n	8000246 <.loop12>
 
         pop {r9}

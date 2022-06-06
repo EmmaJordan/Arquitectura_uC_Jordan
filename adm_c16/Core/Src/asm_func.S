@@ -58,12 +58,14 @@
     asm_zeros:
         @ Registros usados
         @   r2: valor cero
-        mov r2, 0           @ constante cero
+        mov r2, 0           @ constante cero en r2
     .asm_zeros_loop:
-        str r2, [r0], 4     @ sizeof(uint32_t) == 4, *vector++ = r2. //str carga en memoria el valor de un registro
-        subs r1, 1          @ --longitud
-        bne .asm_zeros_loop
-        bx lr
+        str r2, [r0], 4    	@str carga en memoria el valor de un registro
+        					@carga en memoria (r0=*vector[0]) lo que tengo en r2 (0) y luego r0+=4 --> r0=*vector[1];
+        					@ sizeof(uint32_t) == 4, *vector++ = r2. //
+        subs r1, 1          @ r1-=1; longitud--; y actualiza flag de estado del procesador
+        bne .asm_zeros_loop @vuelve a repetir el ciclo, con salto condicional (NE: not equal, flag Z=0), es decir mientras r1 no sea 0
+        bx lr				@retorna link register
 
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -87,13 +89,13 @@
 	push {r6}
 
     .loop32:
-    	ldr	r5, [r0], 4 	@carga un registro r5 con un valor de memoria y luego r0+=4;
-    						@es decir, carga en r5 con lo que hay que r0 (*vectorIn) e incrementa el puntero de vectorIn
+    	ldr	r5, [r0], 4 	@carga un registro r5 con un valor de memoria r0 y luego r0+=4;
+    						@es decir, carga en r5 lo que hay en r0 (*vectorIn) e incrementa el puntero de vectorIn
     	mul r6, r5, r3  	@multiplica r5 por r3 (escalar) y lo guarda en r6
 		str r6, [r1], 4 	@carga en memoria r1 lo que tengo en r6 y luego r1+=4;
 							@es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
-    	subs r2, 1      	@decrementa en 1 a r2 (longitud--)
-        bne	.loop32			@vuelve a .loop32
+    	subs r2, 1      	@decrementa en 1 a r2 (longitud--)y actualiza flag de estado del procesador
+        bne	.loop32			@vuelve a .loop32, ejecución condicional (Not Equal, es decir Z=0)
 
         pop {r6}
         pop {r5}
@@ -116,19 +118,19 @@
 @
 .thumb_func
 
-    asm_productoEscalar16:
+    asm_productoEscalar16: //REVISAR, Carlos le puso ldrh y strh
 
     push {r8}
 	push {r9}
 
     .loop16:
-    	ldr	r8, [r0], 4 	@carga un registro r8 con un valor de memoria y luego r0+=4;
-    						@es decir, carga en r8 con lo que hay que r0 (*vectorIn) e incrementa el puntero de vectorIn
+    	ldr	r8, [r0], 4 	@carga un registro r8 con un valor de memoria r0 y luego r0+=4;
+    						@es decir, carga en r8 lo que hay en r0 (*vectorIn) e incrementa el puntero de vectorIn
     	mul r9, r8, r3  	@multiplica r8 por r3 (escalar) y lo guarda en r6
-		str r9, [r1], 4 	@carga en memoria r1 lo que tengo en r6 y luego r1+=4;
+		str r9, [r1], 4 	@carga en memoria r1 lo que tengo en r9 y luego r1+=4;
 							@es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
     	subs r2, 1      	@decrementa en 1 a r2 (longitud--)
-        bne	.loop16			@vuelve a .loop16
+        bne	.loop16			@vuelve a .loop16, ejecución condicional (Not Equal, es decir Z=0)
 
         pop {r9}
         pop {r8}
@@ -157,14 +159,14 @@
 	push {r9}
 
     .loop12:
-    	ldrh  	r8, [r0], 2 	@carga un registro r8 con un valor de memoria y luego r0+=2; <------
-    							@es decir, carga en r8 con lo que hay que r0 (*vectorIn) e incrementa el puntero de vectorIn
+    	ldrh  	r8, [r0], 2 	@carga un registro r8 con un valor de memoria r0 y luego r0+=2; <------
+    							@es decir, carga en r8 lo que hay en r0 (*vectorIn) e incrementa el puntero de vectorIn
     	mul 	r9, r8,  r3  	@multiplica r8 por r3 (escalar) y lo guarda en r9
-		usat 	r9, #12, r9    //AGREGADO SATURACIÓN a 12 bits
+		usat 	r9, 12,  r9    //AGREGADO SATURACIÓN a 12 bits
 		strh  	r9, [r1], 2 	@carga en memoria r1 lo que tengo en r9 y luego r1+=2; <----
 								@es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
     	subs 	r2, 1      		@decrementa en 1 a r2 (longitud--)
-        bne		.loop12			@vuelve a .loop12
+        bne		.loop12			@vuelve a .loop12, ejecución condicional (Not Equal, es decir Z=0)
 
         pop {r9}
         pop {r8}

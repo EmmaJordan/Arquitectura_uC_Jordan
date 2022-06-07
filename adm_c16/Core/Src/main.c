@@ -186,6 +186,11 @@ int main(void)
   productoEscalar12(miArreglo16,miArreglo16,miLongitud,miEscalar2);
   asm_productoEscalar12(miArreglo16,miArreglo16,miLongitud,miEscalar3);
 
+  //invertir
+  llenaArreglo16(miArreglo16,miLongitud);
+  invertir(miArreglo16,miLongitud);
+  invertir(miArreglo16,miLongitud);
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   char miChar = 'a';

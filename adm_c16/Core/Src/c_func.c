@@ -61,15 +61,15 @@ void productoEscalar12(uint16_t *vectorIn, uint16_t *vectorOut, uint32_t longitu
 void invertir (uint16_t * vector, uint32_t longitud)
 {
 	uint16_t aux;
-	uint32_t index1 = 0, index2 = longitud - 1, loops;
-
-	loops = longitud/2;
-	while(loops--)
+	uint32_t i1 = 0;					//i1 comienza en el primer elemento y luego se incrementa
+	uint32_t i2 = longitud - 1; 		//i2 comienza en el último elelmento y luego se decrementa
+	uint32_t inversiones = longitud/2;	//cantidad de inversiones (la mitad del elemento del arreglo, tanto si es par o impar)
+	while(inversiones--)
 	{
-		aux = vector[index2];
-		vector[index2] = vector[index1];
-		vector[index1] = aux;
-		index1++;
-		index2--;
+		aux = vector[i2];
+		vector[i2] = vector[i1];
+		vector[i1] = aux;
+		i1++;
+		i2--;
 	}
 }

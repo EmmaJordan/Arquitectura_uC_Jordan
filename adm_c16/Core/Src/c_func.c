@@ -21,6 +21,18 @@ void llenaArreglo16(uint16_t *vectorOut, uint32_t longitud)
 		vectorOut[longitud] = longitud;
 	}
 }
+
+void llenaArregloSignado(int32_t *vectorOut, uint32_t longitud)
+{
+	int32_t i=70;
+	while(longitud--)
+	{
+		vectorOut[longitud] = i;
+		i-=10;
+	}
+	vectorOut[5] = 200;
+}
+
 //Recorro el arreglo de atrás hacia adelante
 void zeros(uint32_t *vector, uint32_t longitud)
 {
@@ -56,6 +68,24 @@ void productoEscalar12(uint16_t *vectorIn, uint16_t *vectorOut, uint32_t longitu
 			vectorOut[longitud] = (uint16_t) 0x0FFF;
 		}
 	}
+}
+
+int32_t max (int32_t * vectorIn, uint32_t longitud)
+{
+    int32_t valorMaximo  = vectorIn[longitud-1]; //Empiezo en el último valor
+    int32_t indiceMaximo = longitud-1;			 //Empiezo en el último índice
+
+    while(longitud--)
+    {
+        if(vectorIn[longitud] >= valorMaximo)
+        {
+        	valorMaximo  = vectorIn[longitud];
+        	indiceMaximo = longitud;
+        }
+
+    }
+
+    return indiceMaximo;
 }
 
 void invertir (uint16_t * vector, uint32_t longitud)

@@ -161,17 +161,19 @@ int main(void)
 
   //const uint32_t Resultado = asm_sum (5, 3);
   /* USER CODE END 2 */
-  uint32_t miLongitud = 10;
+  uint32_t miLongitud = 20;
   uint32_t miEscalar1  = 3;
   uint32_t miEscalar2  = 10;
   uint32_t miEscalar3  = 100;
   uint32_t miArreglo32[miLongitud];
   uint16_t miArreglo16[miLongitud];
+  int32_t  miArregloSignado[miLongitud];
   //uint32_t miArreglo4[miLongitud];
 
   zeros(miArreglo32,miLongitud);
   llenaArreglo32(miArreglo32,miLongitud);
   llenaArreglo16(miArreglo16,miLongitud);
+  llenaArregloSignado(miArregloSignado,miLongitud);
 
   //32 bits
   productoEscalar32(miArreglo32,miArreglo32,miLongitud,miEscalar1);
@@ -185,6 +187,10 @@ int main(void)
   llenaArreglo16(miArreglo16,miLongitud);
   productoEscalar12(miArreglo16,miArreglo16,miLongitud,miEscalar2);
   asm_productoEscalar12(miArreglo16,miArreglo16,miLongitud,miEscalar3);
+
+  //maximo
+  int32_t numMax = 0;
+  numMax = max(miArregloSignado,miLongitud);
 
   //invertir
   llenaArreglo16(miArreglo16,miLongitud);

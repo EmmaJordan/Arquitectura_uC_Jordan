@@ -10,6 +10,7 @@
 .global asm_productoEscalar16
 .global asm_productoEscalar12
 .global asm_productoEscalar12_usat
+.global asm_max
 .global asm_invertir
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -230,6 +231,49 @@
 @ Valor de retorno:
 @   Ninguno
 @
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@ int32_t asm_max (int32_t * vectorIn, uint32_t longitud);
+@
+@ Parametros recibidos:
+@   r0: * vector
+@   r1: longitud
+@
+@ Valor de retorno:
+@   r0: posicion en el vector del maximo valor
+@
+.thumb_func
+
+	    asm_max:
+
+	    	push {r4}
+	    	push {r5}
+
+	    	ldr r2, [r0], 4    	@ guardo en r2=*r0 (primer elemento del arreglo) e incremento puntero
+	    	mov r3, 1			@ r3 = 1; --> índice Máximo inicial
+	    	mov r4, 1			@ r4 = 1;
+			subs r1, 1			@ r1-= 1; longitud--;
+	        beq .endMax			@ salto condicional Equal (Z=1) --> if(longitud==0) goto endMax
+
+		.loopMax:
+			add r4, 1			@r4+=1; --> r4 = 2;
+			ldr r5, [r0], 4		@r5 = *r0
+			cmp r2, r5			@comparo elemento actual con anterior
+			bgt .salto			@salto condicional Greater Than signed (Z=0, N=V) --> si encontré un nuevo máximo, goto salto
+			mov r2, r5			@actualizo elemento actual
+			mov r3, r4			@actualizo índice Máximo
+
+		.salto:
+	    	subs r1, 1			@ r1-= 1; longitud--;
+	        bne	.loopMax		@ salto condicional Not Equal (Z=0) --> if(longitud!=1) goto loopMax
+
+	    .endMax:
+	        sub r3, 1
+	        mov r0, r3			@guardo en valor de retorno el índice máximo
+	        pop {r5}
+	        pop {r4}
+	    	bx lr
 
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":

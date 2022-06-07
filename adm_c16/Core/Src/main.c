@@ -191,6 +191,7 @@ int main(void)
   //maximo
   int32_t numMax = 0;
   numMax = max(miArregloSignado,miLongitud);
+  numMax = asm_max(miArregloSignado,miLongitud);
 
   //invertir
   llenaArreglo16(miArreglo16,miLongitud);

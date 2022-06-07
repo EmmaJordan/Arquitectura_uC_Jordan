@@ -29,23 +29,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  12 .ARM.attributes 00000030  00000000  00000000  0002000c  2**0
                   CONTENTS, READONLY
- 13 .debug_line   0000c4a7  00000000  00000000  0002003c  2**0
+ 13 .debug_line   0000c828  00000000  00000000  0002003c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_info   0000ed62  00000000  00000000  0002c4e3  2**0
+ 14 .debug_info   0000eeab  00000000  00000000  0002c864  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_abbrev 00001d07  00000000  00000000  0003b245  2**0
+ 15 .debug_abbrev 00001d88  00000000  00000000  0003b70f  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_aranges 00000b70  00000000  00000000  0003cf50  2**3
+ 16 .debug_aranges 00000b88  00000000  00000000  0003d498  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_str    000d9baa  00000000  00000000  0003dac0  2**0
+ 17 .debug_str    000d9bce  00000000  00000000  0003e020  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_ranges 00000ab8  00000000  00000000  00117670  2**3
+ 18 .debug_ranges 00000ac0  00000000  00000000  00117bf0  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_macro  000230c5  00000000  00000000  00118128  2**0
+ 19 .debug_macro  00023bb4  00000000  00000000  001186b0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000050  00000000  00000000  0013b1ed  2**0
+ 20 .comment      00000050  00000000  00000000  0013c264  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  00003028  00000000  00000000  0013b240  2**2
+ 21 .debug_frame  00003038  00000000  00000000  0013c2b4  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -560,120 +560,81 @@ Disassembly of section .text:
  8000590:	4770      	bx	lr
  8000592:	bf00      	nop
 
-08000594 <PrivilegiosSVC>:
-/* USER CODE END PFP */
+08000594 <llenaArreglo32>:
+ *      Author: Win10
+ */
+#include "c_func.h"
 
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-static void PrivilegiosSVC (void)
+void llenaArreglo32(uint32_t *vectorOut, uint32_t longitud)
 {
- 8000594:	b580      	push	{r7, lr}
- 8000596:	b088      	sub	sp, #32
+ 8000594:	b480      	push	{r7}
+ 8000596:	b083      	sub	sp, #12
  8000598:	af00      	add	r7, sp, #0
- */
-__STATIC_FORCEINLINE uint32_t __get_CONTROL(void)
-{
-  uint32_t result;
-
-  __ASM volatile ("MRS %0, control" : "=r" (result) );
- 800059a:	f3ef 8314 	mrs	r3, CONTROL
- 800059e:	607b      	str	r3, [r7, #4]
-  return(result);
- 80005a0:	687b      	ldr	r3, [r7, #4]
-    // bit 1: Mapeo del stack pointer(sp). MSP=0, PSP=1.
-    // bit 0: Modo de ejecucion en Thread. Privilegiado=0, No privilegiado=1.
-    //        Recordar que este valor solo se usa en modo Thread. Las
-    //        interrupciones siempre se ejecutan en modo Handler con total
-    //        privilegio.
-    uint32_t x = __get_CONTROL ();
- 80005a2:	61fb      	str	r3, [r7, #28]
-
-    // Actividad de debug: Ver registro "control" y valor de variable "x".
-    //__BKPT (0);
-
-    x |= 1;
- 80005a4:	69fb      	ldr	r3, [r7, #28]
- 80005a6:	f043 0301 	orr.w	r3, r3, #1
- 80005aa:	61fb      	str	r3, [r7, #28]
- 80005ac:	69fb      	ldr	r3, [r7, #28]
- 80005ae:	60bb      	str	r3, [r7, #8]
-  \details Writes the given value to the Control Register.
-  \param [in]    control  Control Register value to set
- */
-__STATIC_FORCEINLINE void __set_CONTROL(uint32_t control)
-{
-  __ASM volatile ("MSR control, %0" : : "r" (control) : "memory");
- 80005b0:	68bb      	ldr	r3, [r7, #8]
- 80005b2:	f383 8814 	msr	CONTROL, r3
+ 800059a:	6078      	str	r0, [r7, #4]
+ 800059c:	6039      	str	r1, [r7, #0]
+	while(longitud--)
+ 800059e:	e005      	b.n	80005ac <llenaArreglo32+0x18>
+	{
+		vectorOut[longitud] = longitud;
+ 80005a0:	683b      	ldr	r3, [r7, #0]
+ 80005a2:	009b      	lsls	r3, r3, #2
+ 80005a4:	687a      	ldr	r2, [r7, #4]
+ 80005a6:	4413      	add	r3, r2
+ 80005a8:	683a      	ldr	r2, [r7, #0]
+ 80005aa:	601a      	str	r2, [r3, #0]
+	while(longitud--)
+ 80005ac:	683b      	ldr	r3, [r7, #0]
+ 80005ae:	1e5a      	subs	r2, r3, #1
+ 80005b0:	603a      	str	r2, [r7, #0]
+ 80005b2:	2b00      	cmp	r3, #0
+ 80005b4:	d1f4      	bne.n	80005a0 <llenaArreglo32+0xc>
+	}
 }
  80005b6:	bf00      	nop
-  __ASM volatile ("MRS %0, control" : "=r" (result) );
- 80005b8:	f3ef 8314 	mrs	r3, CONTROL
- 80005bc:	60fb      	str	r3, [r7, #12]
-  return(result);
- 80005be:	68fb      	ldr	r3, [r7, #12]
-    // bit 0 a modo No privilegiado.
-    __set_CONTROL (x);
+ 80005b8:	bf00      	nop
+ 80005ba:	370c      	adds	r7, #12
+ 80005bc:	46bd      	mov	sp, r7
+ 80005be:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80005c2:	4770      	bx	lr
 
-    // En este punto se estaria ejecutando en modo No privilegiado.
-    // Lectura del registro "control" para confirmar.
-    x = __get_CONTROL ();
- 80005c0:	61fb      	str	r3, [r7, #28]
+080005c4 <llenaArreglo16>:
 
-    // Actividad de debug: Ver registro "control" y valor de variable "x".
-    //__BKPT (0);
-
-    x &= ~1u;
- 80005c2:	69fb      	ldr	r3, [r7, #28]
- 80005c4:	f023 0301 	bic.w	r3, r3, #1
- 80005c8:	61fb      	str	r3, [r7, #28]
- 80005ca:	69fb      	ldr	r3, [r7, #28]
- 80005cc:	613b      	str	r3, [r7, #16]
-  __ASM volatile ("MSR control, %0" : : "r" (control) : "memory");
- 80005ce:	693b      	ldr	r3, [r7, #16]
- 80005d0:	f383 8814 	msr	CONTROL, r3
+void llenaArreglo16(uint16_t *vectorOut, uint32_t longitud)
+{
+ 80005c4:	b480      	push	{r7}
+ 80005c6:	b083      	sub	sp, #12
+ 80005c8:	af00      	add	r7, sp, #0
+ 80005ca:	6078      	str	r0, [r7, #4]
+ 80005cc:	6039      	str	r1, [r7, #0]
+	while(longitud--)
+ 80005ce:	e006      	b.n	80005de <llenaArreglo16+0x1a>
+	{
+		vectorOut[longitud] = longitud;
+ 80005d0:	683b      	ldr	r3, [r7, #0]
+ 80005d2:	005b      	lsls	r3, r3, #1
+ 80005d4:	687a      	ldr	r2, [r7, #4]
+ 80005d6:	4413      	add	r3, r2
+ 80005d8:	683a      	ldr	r2, [r7, #0]
+ 80005da:	b292      	uxth	r2, r2
+ 80005dc:	801a      	strh	r2, [r3, #0]
+	while(longitud--)
+ 80005de:	683b      	ldr	r3, [r7, #0]
+ 80005e0:	1e5a      	subs	r2, r3, #1
+ 80005e2:	603a      	str	r2, [r7, #0]
+ 80005e4:	2b00      	cmp	r3, #0
+ 80005e6:	d1f3      	bne.n	80005d0 <llenaArreglo16+0xc>
+	}
 }
- 80005d4:	bf00      	nop
-  __ASM volatile ("MRS %0, control" : "=r" (result) );
- 80005d6:	f3ef 8314 	mrs	r3, CONTROL
- 80005da:	617b      	str	r3, [r7, #20]
-  return(result);
- 80005dc:	697b      	ldr	r3, [r7, #20]
-    // Se intenta volver a modo Privilegiado (bit 0, valor 0).
-    __set_CONTROL (x);
+ 80005e8:	bf00      	nop
+ 80005ea:	bf00      	nop
+ 80005ec:	370c      	adds	r7, #12
+ 80005ee:	46bd      	mov	sp, r7
+ 80005f0:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80005f4:	4770      	bx	lr
 
-    // Confirma que esta operacion es ignorada por estar ejecutandose en modo
-    // Thread no privilegiado.
-    x = __get_CONTROL ();
- 80005de:	61fb      	str	r3, [r7, #28]
-    // Para esto se invoca por software a la interrupcion SVC (Supervisor Call)
-    // utilizando la instruccion "svc".
-    // No hay intrinsics para realizar esta tarea. Para utilizar la instruccion
-    // es necesario implementar una funcion en assembler. Ver el archivo
-    // asm_func.S.
-    asm_svc ();
- 80005e0:	f7ff fe04 	bl	80001ec <asm_svc>
-  __ASM volatile ("MRS %0, control" : "=r" (result) );
- 80005e4:	f3ef 8314 	mrs	r3, CONTROL
- 80005e8:	61bb      	str	r3, [r7, #24]
-  return(result);
- 80005ea:	69bb      	ldr	r3, [r7, #24]
-
-    // El sistema operativo (el handler de SVC) deberia haber devuelto el modo
-    // de ejecucion de Thread a privilegiado (bit 0 en valor 0).
-    x = __get_CONTROL ();
- 80005ec:	61fb      	str	r3, [r7, #28]
-
-    // Fin del ejemplo de SVC
-}
- 80005ee:	bf00      	nop
- 80005f0:	3720      	adds	r7, #32
- 80005f2:	46bd      	mov	sp, r7
- 80005f4:	bd80      	pop	{r7, pc}
-
-080005f6 <llenaArreglo32>:
-/* USER CODE END 0 */
-void llenaArreglo32(uint32_t *vectorOut, uint32_t longitud)
+080005f6 <zeros>:
+//Recorro el arreglo de atrás hacia adelante
+void zeros(uint32_t *vector, uint32_t longitud)
 {
  80005f6:	b480      	push	{r7}
  80005f8:	b083      	sub	sp, #12
@@ -681,21 +642,21 @@ void llenaArreglo32(uint32_t *vectorOut, uint32_t longitud)
  80005fc:	6078      	str	r0, [r7, #4]
  80005fe:	6039      	str	r1, [r7, #0]
 	while(longitud--)
- 8000600:	e005      	b.n	800060e <llenaArreglo32+0x18>
+ 8000600:	e005      	b.n	800060e <zeros+0x18>
 	{
-		vectorOut[longitud] = longitud;
+		vector[longitud] = 0;
  8000602:	683b      	ldr	r3, [r7, #0]
  8000604:	009b      	lsls	r3, r3, #2
  8000606:	687a      	ldr	r2, [r7, #4]
  8000608:	4413      	add	r3, r2
- 800060a:	683a      	ldr	r2, [r7, #0]
+ 800060a:	2200      	movs	r2, #0
  800060c:	601a      	str	r2, [r3, #0]
 	while(longitud--)
  800060e:	683b      	ldr	r3, [r7, #0]
  8000610:	1e5a      	subs	r2, r3, #1
  8000612:	603a      	str	r2, [r7, #0]
  8000614:	2b00      	cmp	r3, #0
- 8000616:	d1f4      	bne.n	8000602 <llenaArreglo32+0xc>
+ 8000616:	d1f4      	bne.n	8000602 <zeros+0xc>
 	}
 }
  8000618:	bf00      	nop
@@ -705,151 +666,142 @@ void llenaArreglo32(uint32_t *vectorOut, uint32_t longitud)
  8000620:	f85d 7b04 	ldr.w	r7, [sp], #4
  8000624:	4770      	bx	lr
 
-08000626 <llenaArreglo16>:
-
-void llenaArreglo16(uint16_t *vectorOut, uint32_t longitud)
-{
- 8000626:	b480      	push	{r7}
- 8000628:	b083      	sub	sp, #12
- 800062a:	af00      	add	r7, sp, #0
- 800062c:	6078      	str	r0, [r7, #4]
- 800062e:	6039      	str	r1, [r7, #0]
-	while(longitud--)
- 8000630:	e006      	b.n	8000640 <llenaArreglo16+0x1a>
-	{
-		vectorOut[longitud] = longitud;
- 8000632:	683b      	ldr	r3, [r7, #0]
- 8000634:	005b      	lsls	r3, r3, #1
- 8000636:	687a      	ldr	r2, [r7, #4]
- 8000638:	4413      	add	r3, r2
- 800063a:	683a      	ldr	r2, [r7, #0]
- 800063c:	b292      	uxth	r2, r2
- 800063e:	801a      	strh	r2, [r3, #0]
-	while(longitud--)
- 8000640:	683b      	ldr	r3, [r7, #0]
- 8000642:	1e5a      	subs	r2, r3, #1
- 8000644:	603a      	str	r2, [r7, #0]
- 8000646:	2b00      	cmp	r3, #0
- 8000648:	d1f3      	bne.n	8000632 <llenaArreglo16+0xc>
-	}
-}
- 800064a:	bf00      	nop
- 800064c:	bf00      	nop
- 800064e:	370c      	adds	r7, #12
- 8000650:	46bd      	mov	sp, r7
- 8000652:	f85d 7b04 	ldr.w	r7, [sp], #4
- 8000656:	4770      	bx	lr
-
-08000658 <zeros>:
-//Recorro el arreglo de atrás hacia adelante
-void zeros(uint32_t *vector, uint32_t longitud)
-{
- 8000658:	b480      	push	{r7}
- 800065a:	b083      	sub	sp, #12
- 800065c:	af00      	add	r7, sp, #0
- 800065e:	6078      	str	r0, [r7, #4]
- 8000660:	6039      	str	r1, [r7, #0]
-	while(longitud--)
- 8000662:	e005      	b.n	8000670 <zeros+0x18>
-	{
-		vector[longitud] = 0;
- 8000664:	683b      	ldr	r3, [r7, #0]
- 8000666:	009b      	lsls	r3, r3, #2
- 8000668:	687a      	ldr	r2, [r7, #4]
- 800066a:	4413      	add	r3, r2
- 800066c:	2200      	movs	r2, #0
- 800066e:	601a      	str	r2, [r3, #0]
-	while(longitud--)
- 8000670:	683b      	ldr	r3, [r7, #0]
- 8000672:	1e5a      	subs	r2, r3, #1
- 8000674:	603a      	str	r2, [r7, #0]
- 8000676:	2b00      	cmp	r3, #0
- 8000678:	d1f4      	bne.n	8000664 <zeros+0xc>
-	}
-}
- 800067a:	bf00      	nop
- 800067c:	bf00      	nop
- 800067e:	370c      	adds	r7, #12
- 8000680:	46bd      	mov	sp, r7
- 8000682:	f85d 7b04 	ldr.w	r7, [sp], #4
- 8000686:	4770      	bx	lr
-
-08000688 <productoEscalar32>:
+08000626 <productoEscalar32>:
 
 void productoEscalar32(uint32_t *vectorIn, uint32_t *vectorOut, uint32_t longitud, uint32_t escalar)
 {
- 8000688:	b480      	push	{r7}
- 800068a:	b085      	sub	sp, #20
- 800068c:	af00      	add	r7, sp, #0
- 800068e:	60f8      	str	r0, [r7, #12]
- 8000690:	60b9      	str	r1, [r7, #8]
- 8000692:	607a      	str	r2, [r7, #4]
- 8000694:	603b      	str	r3, [r7, #0]
+ 8000626:	b480      	push	{r7}
+ 8000628:	b085      	sub	sp, #20
+ 800062a:	af00      	add	r7, sp, #0
+ 800062c:	60f8      	str	r0, [r7, #12]
+ 800062e:	60b9      	str	r1, [r7, #8]
+ 8000630:	607a      	str	r2, [r7, #4]
+ 8000632:	603b      	str	r3, [r7, #0]
 	while(longitud--)
- 8000696:	e00c      	b.n	80006b2 <productoEscalar32+0x2a>
+ 8000634:	e00c      	b.n	8000650 <productoEscalar32+0x2a>
 	{
 		vectorOut[longitud] = vectorIn[longitud] * escalar;
- 8000698:	687b      	ldr	r3, [r7, #4]
- 800069a:	009b      	lsls	r3, r3, #2
- 800069c:	68fa      	ldr	r2, [r7, #12]
- 800069e:	4413      	add	r3, r2
- 80006a0:	681a      	ldr	r2, [r3, #0]
- 80006a2:	687b      	ldr	r3, [r7, #4]
- 80006a4:	009b      	lsls	r3, r3, #2
- 80006a6:	68b9      	ldr	r1, [r7, #8]
- 80006a8:	440b      	add	r3, r1
- 80006aa:	6839      	ldr	r1, [r7, #0]
- 80006ac:	fb01 f202 	mul.w	r2, r1, r2
- 80006b0:	601a      	str	r2, [r3, #0]
+ 8000636:	687b      	ldr	r3, [r7, #4]
+ 8000638:	009b      	lsls	r3, r3, #2
+ 800063a:	68fa      	ldr	r2, [r7, #12]
+ 800063c:	4413      	add	r3, r2
+ 800063e:	681a      	ldr	r2, [r3, #0]
+ 8000640:	687b      	ldr	r3, [r7, #4]
+ 8000642:	009b      	lsls	r3, r3, #2
+ 8000644:	68b9      	ldr	r1, [r7, #8]
+ 8000646:	440b      	add	r3, r1
+ 8000648:	6839      	ldr	r1, [r7, #0]
+ 800064a:	fb01 f202 	mul.w	r2, r1, r2
+ 800064e:	601a      	str	r2, [r3, #0]
 	while(longitud--)
- 80006b2:	687b      	ldr	r3, [r7, #4]
- 80006b4:	1e5a      	subs	r2, r3, #1
- 80006b6:	607a      	str	r2, [r7, #4]
- 80006b8:	2b00      	cmp	r3, #0
- 80006ba:	d1ed      	bne.n	8000698 <productoEscalar32+0x10>
+ 8000650:	687b      	ldr	r3, [r7, #4]
+ 8000652:	1e5a      	subs	r2, r3, #1
+ 8000654:	607a      	str	r2, [r7, #4]
+ 8000656:	2b00      	cmp	r3, #0
+ 8000658:	d1ed      	bne.n	8000636 <productoEscalar32+0x10>
 	}
 }
- 80006bc:	bf00      	nop
- 80006be:	bf00      	nop
- 80006c0:	3714      	adds	r7, #20
- 80006c2:	46bd      	mov	sp, r7
- 80006c4:	f85d 7b04 	ldr.w	r7, [sp], #4
- 80006c8:	4770      	bx	lr
+ 800065a:	bf00      	nop
+ 800065c:	bf00      	nop
+ 800065e:	3714      	adds	r7, #20
+ 8000660:	46bd      	mov	sp, r7
+ 8000662:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000666:	4770      	bx	lr
 
-080006ca <productoEscalar16>:
+08000668 <productoEscalar16>:
 
 void productoEscalar16(uint16_t *vectorIn, uint16_t *vectorOut, uint32_t longitud, uint16_t escalar)
 {
- 80006ca:	b480      	push	{r7}
- 80006cc:	b085      	sub	sp, #20
- 80006ce:	af00      	add	r7, sp, #0
- 80006d0:	60f8      	str	r0, [r7, #12]
- 80006d2:	60b9      	str	r1, [r7, #8]
- 80006d4:	607a      	str	r2, [r7, #4]
- 80006d6:	807b      	strh	r3, [r7, #2]
+ 8000668:	b480      	push	{r7}
+ 800066a:	b085      	sub	sp, #20
+ 800066c:	af00      	add	r7, sp, #0
+ 800066e:	60f8      	str	r0, [r7, #12]
+ 8000670:	60b9      	str	r1, [r7, #8]
+ 8000672:	607a      	str	r2, [r7, #4]
+ 8000674:	807b      	strh	r3, [r7, #2]
 	while(longitud--)
- 80006d8:	e00d      	b.n	80006f6 <productoEscalar16+0x2c>
+ 8000676:	e00d      	b.n	8000694 <productoEscalar16+0x2c>
 	{
 		vectorOut[longitud] = vectorIn[longitud] * escalar;
- 80006da:	687b      	ldr	r3, [r7, #4]
- 80006dc:	005b      	lsls	r3, r3, #1
- 80006de:	68fa      	ldr	r2, [r7, #12]
- 80006e0:	4413      	add	r3, r2
- 80006e2:	881a      	ldrh	r2, [r3, #0]
- 80006e4:	687b      	ldr	r3, [r7, #4]
- 80006e6:	005b      	lsls	r3, r3, #1
- 80006e8:	68b9      	ldr	r1, [r7, #8]
- 80006ea:	440b      	add	r3, r1
- 80006ec:	8879      	ldrh	r1, [r7, #2]
- 80006ee:	fb11 f202 	smulbb	r2, r1, r2
- 80006f2:	b292      	uxth	r2, r2
+ 8000678:	687b      	ldr	r3, [r7, #4]
+ 800067a:	005b      	lsls	r3, r3, #1
+ 800067c:	68fa      	ldr	r2, [r7, #12]
+ 800067e:	4413      	add	r3, r2
+ 8000680:	881a      	ldrh	r2, [r3, #0]
+ 8000682:	687b      	ldr	r3, [r7, #4]
+ 8000684:	005b      	lsls	r3, r3, #1
+ 8000686:	68b9      	ldr	r1, [r7, #8]
+ 8000688:	440b      	add	r3, r1
+ 800068a:	8879      	ldrh	r1, [r7, #2]
+ 800068c:	fb11 f202 	smulbb	r2, r1, r2
+ 8000690:	b292      	uxth	r2, r2
+ 8000692:	801a      	strh	r2, [r3, #0]
+	while(longitud--)
+ 8000694:	687b      	ldr	r3, [r7, #4]
+ 8000696:	1e5a      	subs	r2, r3, #1
+ 8000698:	607a      	str	r2, [r7, #4]
+ 800069a:	2b00      	cmp	r3, #0
+ 800069c:	d1ec      	bne.n	8000678 <productoEscalar16+0x10>
+	}
+}
+ 800069e:	bf00      	nop
+ 80006a0:	bf00      	nop
+ 80006a2:	3714      	adds	r7, #20
+ 80006a4:	46bd      	mov	sp, r7
+ 80006a6:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80006aa:	4770      	bx	lr
+
+080006ac <productoEscalar12>:
+
+void productoEscalar12(uint16_t *vectorIn, uint16_t *vectorOut, uint32_t longitud, uint16_t escalar)
+{
+ 80006ac:	b480      	push	{r7}
+ 80006ae:	b085      	sub	sp, #20
+ 80006b0:	af00      	add	r7, sp, #0
+ 80006b2:	60f8      	str	r0, [r7, #12]
+ 80006b4:	60b9      	str	r1, [r7, #8]
+ 80006b6:	607a      	str	r2, [r7, #4]
+ 80006b8:	807b      	strh	r3, [r7, #2]
+	while(longitud--)
+ 80006ba:	e01c      	b.n	80006f6 <productoEscalar12+0x4a>
+	{
+		vectorOut[longitud] = vectorIn[longitud] * escalar;
+ 80006bc:	687b      	ldr	r3, [r7, #4]
+ 80006be:	005b      	lsls	r3, r3, #1
+ 80006c0:	68fa      	ldr	r2, [r7, #12]
+ 80006c2:	4413      	add	r3, r2
+ 80006c4:	881a      	ldrh	r2, [r3, #0]
+ 80006c6:	687b      	ldr	r3, [r7, #4]
+ 80006c8:	005b      	lsls	r3, r3, #1
+ 80006ca:	68b9      	ldr	r1, [r7, #8]
+ 80006cc:	440b      	add	r3, r1
+ 80006ce:	8879      	ldrh	r1, [r7, #2]
+ 80006d0:	fb11 f202 	smulbb	r2, r1, r2
+ 80006d4:	b292      	uxth	r2, r2
+ 80006d6:	801a      	strh	r2, [r3, #0]
+		if(vectorOut[longitud] > (uint16_t) 0x0FFF)
+ 80006d8:	687b      	ldr	r3, [r7, #4]
+ 80006da:	005b      	lsls	r3, r3, #1
+ 80006dc:	68ba      	ldr	r2, [r7, #8]
+ 80006de:	4413      	add	r3, r2
+ 80006e0:	881b      	ldrh	r3, [r3, #0]
+ 80006e2:	f5b3 5f80 	cmp.w	r3, #4096	; 0x1000
+ 80006e6:	d306      	bcc.n	80006f6 <productoEscalar12+0x4a>
+		{
+			vectorOut[longitud] = (uint16_t) 0x0FFF;
+ 80006e8:	687b      	ldr	r3, [r7, #4]
+ 80006ea:	005b      	lsls	r3, r3, #1
+ 80006ec:	68ba      	ldr	r2, [r7, #8]
+ 80006ee:	4413      	add	r3, r2
+ 80006f0:	f640 72ff 	movw	r2, #4095	; 0xfff
  80006f4:	801a      	strh	r2, [r3, #0]
 	while(longitud--)
  80006f6:	687b      	ldr	r3, [r7, #4]
  80006f8:	1e5a      	subs	r2, r3, #1
  80006fa:	607a      	str	r2, [r7, #4]
  80006fc:	2b00      	cmp	r3, #0
- 80006fe:	d1ec      	bne.n	80006da <productoEscalar16+0x10>
+ 80006fe:	d1dd      	bne.n	80006bc <productoEscalar12+0x10>
+		}
 	}
 }
  8000700:	bf00      	nop
@@ -859,65 +811,116 @@ void productoEscalar16(uint16_t *vectorIn, uint16_t *vectorOut, uint32_t longitu
  8000708:	f85d 7b04 	ldr.w	r7, [sp], #4
  800070c:	4770      	bx	lr
 
-0800070e <productoEscalar12>:
+0800070e <PrivilegiosSVC>:
+/* USER CODE END PFP */
 
-void productoEscalar12(uint16_t *vectorIn, uint16_t *vectorOut, uint32_t longitud, uint16_t escalar)
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+static void PrivilegiosSVC (void)
 {
- 800070e:	b480      	push	{r7}
- 8000710:	b085      	sub	sp, #20
+ 800070e:	b580      	push	{r7, lr}
+ 8000710:	b088      	sub	sp, #32
  8000712:	af00      	add	r7, sp, #0
- 8000714:	60f8      	str	r0, [r7, #12]
- 8000716:	60b9      	str	r1, [r7, #8]
- 8000718:	607a      	str	r2, [r7, #4]
- 800071a:	807b      	strh	r3, [r7, #2]
-	while(longitud--)
- 800071c:	e01c      	b.n	8000758 <productoEscalar12+0x4a>
-	{
-		vectorOut[longitud] = vectorIn[longitud] * escalar;
- 800071e:	687b      	ldr	r3, [r7, #4]
- 8000720:	005b      	lsls	r3, r3, #1
- 8000722:	68fa      	ldr	r2, [r7, #12]
- 8000724:	4413      	add	r3, r2
- 8000726:	881a      	ldrh	r2, [r3, #0]
- 8000728:	687b      	ldr	r3, [r7, #4]
- 800072a:	005b      	lsls	r3, r3, #1
- 800072c:	68b9      	ldr	r1, [r7, #8]
- 800072e:	440b      	add	r3, r1
- 8000730:	8879      	ldrh	r1, [r7, #2]
- 8000732:	fb11 f202 	smulbb	r2, r1, r2
- 8000736:	b292      	uxth	r2, r2
- 8000738:	801a      	strh	r2, [r3, #0]
-		if(vectorOut[longitud] > (uint16_t) 0x0FFF)
- 800073a:	687b      	ldr	r3, [r7, #4]
- 800073c:	005b      	lsls	r3, r3, #1
- 800073e:	68ba      	ldr	r2, [r7, #8]
- 8000740:	4413      	add	r3, r2
- 8000742:	881b      	ldrh	r3, [r3, #0]
- 8000744:	f5b3 5f80 	cmp.w	r3, #4096	; 0x1000
- 8000748:	d306      	bcc.n	8000758 <productoEscalar12+0x4a>
-		{
-			vectorOut[longitud] = (uint16_t) 0x0FFF;
- 800074a:	687b      	ldr	r3, [r7, #4]
- 800074c:	005b      	lsls	r3, r3, #1
- 800074e:	68ba      	ldr	r2, [r7, #8]
- 8000750:	4413      	add	r3, r2
- 8000752:	f640 72ff 	movw	r2, #4095	; 0xfff
- 8000756:	801a      	strh	r2, [r3, #0]
-	while(longitud--)
- 8000758:	687b      	ldr	r3, [r7, #4]
- 800075a:	1e5a      	subs	r2, r3, #1
- 800075c:	607a      	str	r2, [r7, #4]
- 800075e:	2b00      	cmp	r3, #0
- 8000760:	d1dd      	bne.n	800071e <productoEscalar12+0x10>
-		}
-	}
+ */
+__STATIC_FORCEINLINE uint32_t __get_CONTROL(void)
+{
+  uint32_t result;
+
+  __ASM volatile ("MRS %0, control" : "=r" (result) );
+ 8000714:	f3ef 8314 	mrs	r3, CONTROL
+ 8000718:	607b      	str	r3, [r7, #4]
+  return(result);
+ 800071a:	687b      	ldr	r3, [r7, #4]
+    // bit 1: Mapeo del stack pointer(sp). MSP=0, PSP=1.
+    // bit 0: Modo de ejecucion en Thread. Privilegiado=0, No privilegiado=1.
+    //        Recordar que este valor solo se usa en modo Thread. Las
+    //        interrupciones siempre se ejecutan en modo Handler con total
+    //        privilegio.
+    uint32_t x = __get_CONTROL ();
+ 800071c:	61fb      	str	r3, [r7, #28]
+
+    // Actividad de debug: Ver registro "control" y valor de variable "x".
+    //__BKPT (0);
+
+    x |= 1;
+ 800071e:	69fb      	ldr	r3, [r7, #28]
+ 8000720:	f043 0301 	orr.w	r3, r3, #1
+ 8000724:	61fb      	str	r3, [r7, #28]
+ 8000726:	69fb      	ldr	r3, [r7, #28]
+ 8000728:	60bb      	str	r3, [r7, #8]
+  \details Writes the given value to the Control Register.
+  \param [in]    control  Control Register value to set
+ */
+__STATIC_FORCEINLINE void __set_CONTROL(uint32_t control)
+{
+  __ASM volatile ("MSR control, %0" : : "r" (control) : "memory");
+ 800072a:	68bb      	ldr	r3, [r7, #8]
+ 800072c:	f383 8814 	msr	CONTROL, r3
 }
- 8000762:	bf00      	nop
- 8000764:	bf00      	nop
- 8000766:	3714      	adds	r7, #20
- 8000768:	46bd      	mov	sp, r7
- 800076a:	f85d 7b04 	ldr.w	r7, [sp], #4
- 800076e:	4770      	bx	lr
+ 8000730:	bf00      	nop
+  __ASM volatile ("MRS %0, control" : "=r" (result) );
+ 8000732:	f3ef 8314 	mrs	r3, CONTROL
+ 8000736:	60fb      	str	r3, [r7, #12]
+  return(result);
+ 8000738:	68fb      	ldr	r3, [r7, #12]
+    // bit 0 a modo No privilegiado.
+    __set_CONTROL (x);
+
+    // En este punto se estaria ejecutando en modo No privilegiado.
+    // Lectura del registro "control" para confirmar.
+    x = __get_CONTROL ();
+ 800073a:	61fb      	str	r3, [r7, #28]
+
+    // Actividad de debug: Ver registro "control" y valor de variable "x".
+    //__BKPT (0);
+
+    x &= ~1u;
+ 800073c:	69fb      	ldr	r3, [r7, #28]
+ 800073e:	f023 0301 	bic.w	r3, r3, #1
+ 8000742:	61fb      	str	r3, [r7, #28]
+ 8000744:	69fb      	ldr	r3, [r7, #28]
+ 8000746:	613b      	str	r3, [r7, #16]
+  __ASM volatile ("MSR control, %0" : : "r" (control) : "memory");
+ 8000748:	693b      	ldr	r3, [r7, #16]
+ 800074a:	f383 8814 	msr	CONTROL, r3
+}
+ 800074e:	bf00      	nop
+  __ASM volatile ("MRS %0, control" : "=r" (result) );
+ 8000750:	f3ef 8314 	mrs	r3, CONTROL
+ 8000754:	617b      	str	r3, [r7, #20]
+  return(result);
+ 8000756:	697b      	ldr	r3, [r7, #20]
+    // Se intenta volver a modo Privilegiado (bit 0, valor 0).
+    __set_CONTROL (x);
+
+    // Confirma que esta operacion es ignorada por estar ejecutandose en modo
+    // Thread no privilegiado.
+    x = __get_CONTROL ();
+ 8000758:	61fb      	str	r3, [r7, #28]
+    // Para esto se invoca por software a la interrupcion SVC (Supervisor Call)
+    // utilizando la instruccion "svc".
+    // No hay intrinsics para realizar esta tarea. Para utilizar la instruccion
+    // es necesario implementar una funcion en assembler. Ver el archivo
+    // asm_func.S.
+    asm_svc ();
+ 800075a:	f7ff fd47 	bl	80001ec <asm_svc>
+  __ASM volatile ("MRS %0, control" : "=r" (result) );
+ 800075e:	f3ef 8314 	mrs	r3, CONTROL
+ 8000762:	61bb      	str	r3, [r7, #24]
+  return(result);
+ 8000764:	69bb      	ldr	r3, [r7, #24]
+
+    // El sistema operativo (el handler de SVC) deberia haber devuelto el modo
+    // de ejecucion de Thread a privilegiado (bit 0 en valor 0).
+    x = __get_CONTROL ();
+ 8000766:	61fb      	str	r3, [r7, #28]
+
+    // Fin del ejemplo de SVC
+}
+ 8000768:	bf00      	nop
+ 800076a:	3720      	adds	r7, #32
+ 800076c:	46bd      	mov	sp, r7
+ 800076e:	bd80      	pop	{r7, pc}
 
 08000770 <main>:
 /**
@@ -959,7 +962,7 @@ int main(void)
  800078c:	f000 f97e 	bl	8000a8c <MX_USB_OTG_FS_PCD_Init>
   /* USER CODE BEGIN 2 */
   PrivilegiosSVC ();
- 8000790:	f7ff ff00 	bl	8000594 <PrivilegiosSVC>
+ 8000790:	f7ff ffbd 	bl	800070e <PrivilegiosSVC>
 
   //const uint32_t Resultado = asm_sum (5, 3);
   /* USER CODE END 2 */
@@ -1045,15 +1048,15 @@ int main(void)
   zeros(miArreglo32,miLongitud);
  8000846:	6ab9      	ldr	r1, [r7, #40]	; 0x28
  8000848:	6978      	ldr	r0, [r7, #20]
- 800084a:	f7ff ff05 	bl	8000658 <zeros>
+ 800084a:	f7ff fed4 	bl	80005f6 <zeros>
   llenaArreglo32(miArreglo32,miLongitud);
  800084e:	6ab9      	ldr	r1, [r7, #40]	; 0x28
  8000850:	6978      	ldr	r0, [r7, #20]
- 8000852:	f7ff fed0 	bl	80005f6 <llenaArreglo32>
+ 8000852:	f7ff fe9f 	bl	8000594 <llenaArreglo32>
   llenaArreglo16(miArreglo16,miLongitud);
  8000856:	6ab9      	ldr	r1, [r7, #40]	; 0x28
  8000858:	68f8      	ldr	r0, [r7, #12]
- 800085a:	f7ff fee4 	bl	8000626 <llenaArreglo16>
+ 800085a:	f7ff feb3 	bl	80005c4 <llenaArreglo16>
 
   //32 bits
   productoEscalar32(miArreglo32,miArreglo32,miLongitud,miEscalar1);
@@ -1061,7 +1064,7 @@ int main(void)
  8000860:	6aba      	ldr	r2, [r7, #40]	; 0x28
  8000862:	6979      	ldr	r1, [r7, #20]
  8000864:	6978      	ldr	r0, [r7, #20]
- 8000866:	f7ff ff0f 	bl	8000688 <productoEscalar32>
+ 8000866:	f7ff fede 	bl	8000626 <productoEscalar32>
   asm_productoEscalar32(miArreglo32,miArreglo32,miLongitud,miEscalar1);
  800086a:	6a7b      	ldr	r3, [r7, #36]	; 0x24
  800086c:	6aba      	ldr	r2, [r7, #40]	; 0x28
@@ -1076,7 +1079,7 @@ int main(void)
  800087a:	6aba      	ldr	r2, [r7, #40]	; 0x28
  800087c:	68f9      	ldr	r1, [r7, #12]
  800087e:	68f8      	ldr	r0, [r7, #12]
- 8000880:	f7ff ff23 	bl	80006ca <productoEscalar16>
+ 8000880:	f7ff fef2 	bl	8000668 <productoEscalar16>
   asm_productoEscalar16(miArreglo16,miArreglo16,miLongitud,miEscalar2);
  8000884:	6a3b      	ldr	r3, [r7, #32]
  8000886:	b29b      	uxth	r3, r3
@@ -1089,14 +1092,14 @@ int main(void)
   llenaArreglo16(miArreglo16,miLongitud);
  8000892:	6ab9      	ldr	r1, [r7, #40]	; 0x28
  8000894:	68f8      	ldr	r0, [r7, #12]
- 8000896:	f7ff fec6 	bl	8000626 <llenaArreglo16>
+ 8000896:	f7ff fe95 	bl	80005c4 <llenaArreglo16>
   productoEscalar12(miArreglo16,miArreglo16,miLongitud,miEscalar2);
  800089a:	6a3b      	ldr	r3, [r7, #32]
  800089c:	b29b      	uxth	r3, r3
  800089e:	6aba      	ldr	r2, [r7, #40]	; 0x28
  80008a0:	68f9      	ldr	r1, [r7, #12]
  80008a2:	68f8      	ldr	r0, [r7, #12]
- 80008a4:	f7ff ff33 	bl	800070e <productoEscalar12>
+ 80008a4:	f7ff ff02 	bl	80006ac <productoEscalar12>
   asm_productoEscalar12(miArreglo16,miArreglo16,miLongitud,miEscalar3);
  80008a8:	69fb      	ldr	r3, [r7, #28]
  80008aa:	b29b      	uxth	r3, r3

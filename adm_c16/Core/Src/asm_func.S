@@ -10,6 +10,7 @@
 .global asm_productoEscalar16
 .global asm_productoEscalar12
 .global asm_productoEscalar12_usat
+.global asm_invertir
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -119,19 +120,19 @@
 @
 .thumb_func
 
-    asm_productoEscalar16: //REVISAR, Carlos le puso ldrh y strh
+    asm_productoEscalar16: //Nota: da el mismo resultado ldr y str con parámetro 4, que ldrh t strh con parámetro 2
 
     push {r8}
 	push {r9}
 
     .loop16:
-    	ldr	r8, [r0], 4 	@carga un registro r8 con un valor de memoria r0 y luego r0+=4;
-    						@es decir, carga en r8 lo que hay en r0 (*vectorIn) e incrementa el puntero de vectorIn
-    	mul r9, r8, r3  	@multiplica r8 por r3 (escalar) y lo guarda en r6
-		str r9, [r1], 4 	@carga en memoria r1 lo que tengo en r9 y luego r1+=4;
-							@es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
-    	subs r2, 1      	@decrementa en 1 a r2 (longitud--)
-        bne	.loop16			@vuelve a .loop16, ejecución condicional (Not Equal, es decir Z=0)
+    	ldrh	r8, [r0], 2 	@carga un registro r8 con un valor de memoria r0 y luego r0+=4;
+    							@es decir, carga en r8 lo que hay en r0 (*vectorIn) e incrementa el puntero de vectorIn
+    	mul 	r9, r8, r3  	@multiplica r8 por r3 (escalar) y lo guarda en r6
+		strh 	r9, [r1], 2 	@carga en memoria r1 lo que tengo en r9 y luego r1+=4;
+								@es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
+    	subs 	r2, 1      		@decrementa en 1 a r2 (longitud--)
+        bne		.loop16			@vuelve a .loop16, ejecución condicional (Not Equal, es decir Z=0)
 
         pop {r9}
         pop {r8}
@@ -216,4 +217,63 @@
         pop {r9}
         pop {r8}
 
+        bx lr
+
+        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@ void asm_invertir (uint16_t * vector, uint32_t longitud);
+@
+@ Parametros recibidos:
+@   r0: * vector
+@   r1: longitud
+@
+@ Valor de retorno:
+@   Ninguno
+@
+
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@ void asm_invertir (uint16_t * vector, uint32_t longitud);
+@
+@ Parametros recibidos:
+@   r0: * vector
+@   r1: longitud
+@
+@ Valor de retorno:
+@   Ninguno
+@
+.thumb_func
+
+    asm_invertir:
+   		// N = número de bytes ocupados
+    	// ejemplo longitud = 10 --> N = 2*10 = 20
+		// 0 a longitud-1 -> 0 a 18 bytes
+        push {r4}
+
+        subs r1, 1			@longitud--; 	--> longitud = 9
+        beq .end_invertir	@salto condicional Equal (Z=1) --> if(longitud==1) goto end_invertir
+
+    	mov r3, 2			@r3 = 2
+    	mul r4, r1, r3		@r4 = (longitud-1)*2 = 18
+    	add r4, r0			@r4  = r4 + *vector[0] = 18 + *vector[0] = *vector[longitud-1]
+
+    	add r1, 1			@longitud++;   --> longitud = 10;
+    	udiv r1, r1, r3		@r1 = r1/r3    --> longitud = 5;
+
+    	//r0 <-- puntero a primer elemento
+    	//r4 <-- puntero a último elemento
+
+    .loop_invertir:
+
+    	ldrh r2, [r0]		@r2 = *vector[0]				//guarda en r2 el primer elemento
+    	ldrh r3, [r4]		@r3 = *vector[longitud-1]		//guarda en r3 el último elemento
+		strh r3, [r0],  2	@r0 = N + *vector [0]; r0+=2;   //guarda en memoria r0 el último elemento, y r0++; (sobreescribe último en primero)
+		strh r2, [r4], -2   @r4 = vector[0]; r0-=2;			//guarda en memoria r0 el primer elemento, y r4--;
+
+    	subs r1, 1			@longitud--; 	--> longitud = 4
+        bne	.loop_invertir	@salto condicional Not Equal (Z=0) --> if(longitud!=1) goto loop_invertir
+
+	.end_invertir:
+
+        pop {r4}
         bx lr

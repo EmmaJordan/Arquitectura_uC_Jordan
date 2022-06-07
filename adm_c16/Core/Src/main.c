@@ -189,7 +189,7 @@ int main(void)
   //invertir
   llenaArreglo16(miArreglo16,miLongitud);
   invertir(miArreglo16,miLongitud);
-  invertir(miArreglo16,miLongitud);
+  asm_invertir(miArreglo16,miLongitud);
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */

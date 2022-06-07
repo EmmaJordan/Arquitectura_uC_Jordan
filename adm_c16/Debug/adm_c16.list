@@ -29,23 +29,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  12 .ARM.attributes 00000030  00000000  00000000  0002000c  2**0
                   CONTENTS, READONLY
- 13 .debug_line   0000c463  00000000  00000000  0002003c  2**0
+ 13 .debug_line   0000c4a7  00000000  00000000  0002003c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_info   0000ecef  00000000  00000000  0002c49f  2**0
+ 14 .debug_info   0000ed62  00000000  00000000  0002c4e3  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_abbrev 00001d07  00000000  00000000  0003b18e  2**0
+ 15 .debug_abbrev 00001d07  00000000  00000000  0003b245  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_aranges 00000b68  00000000  00000000  0003ce98  2**3
+ 16 .debug_aranges 00000b70  00000000  00000000  0003cf50  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_str    000d9b8d  00000000  00000000  0003da00  2**0
+ 17 .debug_str    000d9baa  00000000  00000000  0003dac0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_ranges 00000ab0  00000000  00000000  00117590  2**3
+ 18 .debug_ranges 00000ab8  00000000  00000000  00117670  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_macro  000230c5  00000000  00000000  00118040  2**0
+ 19 .debug_macro  000230c5  00000000  00000000  00118128  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000050  00000000  00000000  0013b105  2**0
+ 20 .comment      00000050  00000000  00000000  0013b1ed  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  00003000  00000000  00000000  0013b158  2**2
+ 21 .debug_frame  00003028  00000000  00000000  0013b240  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -209,86 +209,82 @@ Disassembly of section .text:
 
 08000248 <.loop12>:
     .loop12:
-		    	ldrh  	r4, [r0], 2 	@carga un registro r4 con un valor de memoria r0 y luego r0+=2;
+		    	ldrh  	r4, [r0], 2 	@ carga un registro r4 con un valor de memoria r0 y luego r0+=2;
  8000248:	f830 4b02 	ldrh.w	r4, [r0], #2
-		    							@es decir, carga en r4 lo que hay en r0 (*vectorIn) e incrementa el puntero de vectorIn
-		    	mul 	r5, r4,  r3  	@multiplica r4 por r3 (escalar) y lo guarda en r5
+		    							@ es decir, carga en r4 lo que hay en r0 (*vectorIn) e incrementa el puntero de vectorIn
+		    	mul 	r5, r4,  r3  	@ multiplica r4 por r3 (escalar) y lo guarda en r5
  800024c:	fb04 f503 	mul.w	r5, r4, r3
-				cmp		r6, r5		    // compara r5 con r6 (resta)
+				cmp		r6, r5		    @ compara r5 con r6 (resta)
  8000250:	42ae      	cmp	r6, r5
-				bhi		isNO			// higher unsigned
+				bhi		isNO			@ higher unsigned
  8000252:	d801      	bhi.n	8000258 <isNO>
 
 08000254 <isYES>:
 
 		isYES: //Saturó
-				mov 	r5, r6  //Satura resultado a 12 bits
+				mov 	r5, r6  		@ satura resultado a 12 bits
  8000254:	4635      	mov	r5, r6
-				b done 			//Salto incondicional a done
- 8000256:	e000      	b.n	800025a <done>
+				b isNO 					@ salto incondicional a done
+ 8000256:	e7ff      	b.n	8000258 <isNO>
 
 08000258 <isNO>:
-		isNO:  //No saturó
-				b done 			//Salto incondicional a done
- 8000258:	e7ff      	b.n	800025a <done>
 
-0800025a <done>:
-		done:
-				strh  	r5, [r1], 2		@carga en memoria r1 lo que tengo en r5 y luego r1+=2; <----
- 800025a:	f821 5b02 	strh.w	r5, [r1], #2
-										@es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
-		    	subs 	r2, 1      		@decrementa en 1 a r2 (longitud--)
- 800025e:	3a01      	subs	r2, #1
-		        //cmp		r2, #0
-		        bne		.loop12			@vuelve a .loop12, ejecución condicional (Not Equal, es decir Z=0)
- 8000260:	d1f2      	bne.n	8000248 <.loop12>
+		isNO:
+				strh  	r5, [r1], 2		@ carga en memoria r1 lo que tengo en r5 y luego r1+=2; <----
+ 8000258:	f821 5b02 	strh.w	r5, [r1], #2
+										@ es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
+		    	subs 	r2, 1      		@ decrementa en 1 a r2 (longitud--)
+ 800025c:	3a01      	subs	r2, #1
+		        bne		.loop12			@ vuelve a .loop12, ejecución condicional (Not Equal, es decir Z=0)
+ 800025e:	d1f3      	bne.n	8000248 <.loop12>
 
 				pop {r6}
- 8000262:	bc40      	pop	{r6}
+ 8000260:	bc40      	pop	{r6}
 		        pop {r5}
- 8000264:	bc20      	pop	{r5}
+ 8000262:	bc20      	pop	{r5}
 		        pop {r4}
- 8000266:	bc10      	pop	{r4}
+ 8000264:	bc10      	pop	{r4}
 
 		        bx lr
- 8000268:	4770      	bx	lr
+ 8000266:	4770      	bx	lr
 
-0800026a <asm_productoEscalar12_usat>:
+08000268 <asm_productoEscalar12_usat>:
 @
 .thumb_func
 
     asm_productoEscalar12_usat:
 
     push {r8}
- 800026a:	f84d 8d04 	str.w	r8, [sp, #-4]!
+ 8000268:	f84d 8d04 	str.w	r8, [sp, #-4]!
 	push {r9}
- 800026e:	f84d 9d04 	str.w	r9, [sp, #-4]!
+ 800026c:	f84d 9d04 	str.w	r9, [sp, #-4]!
 
-08000272 <.loop12_usat>:
+08000270 <.loop12_usat>:
 
     .loop12_usat:
     	ldrh  	r8, [r0], 2 	@carga un registro r8 con un valor de memoria r0 y luego r0+=2; <------
- 8000272:	f830 8b02 	ldrh.w	r8, [r0], #2
+ 8000270:	f830 8b02 	ldrh.w	r8, [r0], #2
     							@es decir, carga en r8 lo que hay en r0 (*vectorIn) e incrementa el puntero de vectorIn
     	mul 	r9, r8,  r3  	@multiplica r8 por r3 (escalar) y lo guarda en r9
- 8000276:	fb08 f903 	mul.w	r9, r8, r3
+ 8000274:	fb08 f903 	mul.w	r9, r8, r3
 		usat 	r9, 12,  r9    //AGREGADO SATURACIÓN a 12 bits
- 800027a:	f389 090c 	usat	r9, #12, r9
+ 8000278:	f389 090c 	usat	r9, #12, r9
 		strh  	r9, [r1], 2 	@carga en memoria r1 lo que tengo en r9 y luego r1+=2; <----
- 800027e:	f821 9b02 	strh.w	r9, [r1], #2
+ 800027c:	f821 9b02 	strh.w	r9, [r1], #2
 								@es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
     	subs 	r2, 1      		@decrementa en 1 a r2 (longitud--)
- 8000282:	3a01      	subs	r2, #1
+ 8000280:	3a01      	subs	r2, #1
         bne		.loop12_usat	@vuelve a .loop12, ejecución condicional (Not Equal, es decir Z=0)
- 8000284:	d1f5      	bne.n	8000272 <.loop12_usat>
+ 8000282:	d1f5      	bne.n	8000270 <.loop12_usat>
 
         pop {r9}
- 8000286:	f85d 9b04 	ldr.w	r9, [sp], #4
+ 8000284:	f85d 9b04 	ldr.w	r9, [sp], #4
         pop {r8}
- 800028a:	f85d 8b04 	ldr.w	r8, [sp], #4
+ 8000288:	f85d 8b04 	ldr.w	r8, [sp], #4
 
         bx lr
- 800028e:	4770      	bx	lr
+ 800028c:	4770      	bx	lr
+	...
 
 08000290 <__aeabi_uldivmod>:
  8000290:	b953      	cbnz	r3, 80002a8 <__aeabi_uldivmod+0x18>

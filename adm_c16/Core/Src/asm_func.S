@@ -161,23 +161,21 @@
 	push {r6}
 	mov r6, #0x0FFF		//valor a saturar
     .loop12:
-		    	ldrh  	r4, [r0], 2 	@carga un registro r4 con un valor de memoria r0 y luego r0+=2;
-		    							@es decir, carga en r4 lo que hay en r0 (*vectorIn) e incrementa el puntero de vectorIn
-		    	mul 	r5, r4,  r3  	@multiplica r4 por r3 (escalar) y lo guarda en r5
-				cmp		r6, r5		    // compara r5 con r6 (resta)
-				bhi		isNO			// higher unsigned
+		    	ldrh  	r4, [r0], 2 	@ carga un registro r4 con un valor de memoria r0 y luego r0+=2;
+		    							@ es decir, carga en r4 lo que hay en r0 (*vectorIn) e incrementa el puntero de vectorIn
+		    	mul 	r5, r4,  r3  	@ multiplica r4 por r3 (escalar) y lo guarda en r5
+				cmp		r6, r5		    @ compara r5 con r6 (resta)
+				bhi		isNO			@ higher unsigned
 
 		isYES: //Saturó
-				mov 	r5, r6  //Satura resultado a 12 bits
-				b done 			//Salto incondicional a done
-		isNO:  //No saturó
-				b done 			//Salto incondicional a done
-		done:
-				strh  	r5, [r1], 2		@carga en memoria r1 lo que tengo en r5 y luego r1+=2; <----
-										@es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
-		    	subs 	r2, 1      		@decrementa en 1 a r2 (longitud--)
-		        //cmp		r2, #0
-		        bne		.loop12			@vuelve a .loop12, ejecución condicional (Not Equal, es decir Z=0)
+				mov 	r5, r6  		@ satura resultado a 12 bits
+				b isNO 					@ salto incondicional a done
+
+		isNO:
+				strh  	r5, [r1], 2		@ carga en memoria r1 lo que tengo en r5 y luego r1+=2; <----
+										@ es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
+		    	subs 	r2, 1      		@ decrementa en 1 a r2 (longitud--)
+		        bne		.loop12			@ vuelve a .loop12, ejecución condicional (Not Equal, es decir Z=0)
 
 				pop {r6}
 		        pop {r5}

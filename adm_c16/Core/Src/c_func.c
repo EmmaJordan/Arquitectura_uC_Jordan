@@ -22,6 +22,22 @@ void llenaArreglo16(uint16_t *vectorOut, uint32_t longitud)
 	}
 }
 
+void llenaArregloSignado1(int32_t *vectorOut, uint32_t longitud)
+{
+	while(longitud--)
+	{
+		vectorOut[longitud] = longitud;
+	}
+}
+
+void llenaArregloSignado2(int32_t *vectorOut, uint32_t longitud)
+{
+	while(longitud--)
+	{
+		vectorOut[longitud] = -1;
+	}
+}
+
 void llenaArregloSignado(int32_t *vectorOut, uint32_t longitud)
 {
 	int32_t i=70;
@@ -129,5 +145,26 @@ void filtroVentana10(uint16_t * vectorIn, uint16_t * vectorOut, uint32_t longitu
 		vectorOut[indice] = promedio;
 		indice++;
 		suma = 0;
+	}
+}
+
+void downsampleM(int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud, uint32_t N)
+{
+	uint32_t indiceN = 0;	//recorre vector ignorando cada N elementos
+	uint32_t indiceOut=0;	//índice vector de salida, será menor a medida que se quitan elementos
+
+	for(uint32_t indiceIn=0; indiceIn<longitud; indiceIn++) //recorre vector de entrada
+	{
+
+		if( indiceN >= (N-1) )	//descarta el N-ésimo elemento, vuelve a contar desde 0
+		{
+			indiceN = 0;
+		}
+		else		   			//llega hasta N-1
+		{
+			vectorOut[indiceOut] = vectorIn[indiceIn];
+			indiceOut++;
+			indiceN ++;
+		}
 	}
 }

@@ -16,6 +16,10 @@ void llenaArreglo16(uint16_t *vectorOut, uint32_t longitud);
 
 void llenaArregloSignado(int32_t *vectorOut, uint32_t longitud);
 
+void llenaArregloSignado1(int32_t *vectorOut, uint32_t longitud);
+
+void llenaArregloSignado2(int32_t *vectorOut, uint32_t longitud);
+
 void zeros(uint32_t *vector, uint32_t longitud);
 
 void productoEscalar32(uint32_t *vectorIn, uint32_t *vectorOut, uint32_t longitud, uint32_t escalar);
@@ -29,6 +33,8 @@ int32_t max (int32_t * vectorIn, uint32_t longitud);
 void invertir (uint16_t * vector, uint32_t longitud);
 
 void filtroVentana10(uint16_t * vectorIn, uint16_t * vectorOut, uint32_t longitudVectorIn);
+
+void downsampleM (int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud, uint32_t N);
 
 
 #endif /* INC_C_FUNC_H_ */

@@ -170,7 +170,7 @@ int main(void)
   uint16_t miArreglo16[miLongitud];
   uint16_t miArreglo16_out[miLongitud];
   int32_t  miArregloSignado[miLongitud];
-  //uint32_t miArreglo4[miLongitud];
+  int32_t  miArregloSignado_out[miLongitud];
 
   zeros(miArreglo32,miLongitud);
   llenaArreglo32(miArreglo32,miLongitud);
@@ -206,6 +206,14 @@ int main(void)
   filtroVentana10(miArreglo16,miArreglo16_out,miLongitud);
   llenaArreglo16(miArreglo16,miLongitud);
   asm_filtroVentana10(miArreglo16,miArreglo16_out,miLongitud);
+
+
+  //decima
+  llenaArregloSignado1(miArregloSignado,miLongitud);
+  llenaArregloSignado2(miArregloSignado_out,miLongitud);
+  downsampleM(miArregloSignado,miArregloSignado_out,miLongitud,3);
+  //llenaArreglo16(miArreglo16,miLongitud);
+  //asm_downsampleM(miArreglo16,miArreglo16_out,miLongitud);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   char miChar = 'a';

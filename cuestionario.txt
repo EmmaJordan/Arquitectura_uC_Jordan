@@ -65,6 +65,15 @@ instrucciones. Las instrucciones no operan sobre registros específicos, si no q
 pueden operar. En los Cortex M3 y M4, existen 13 registros de propósito general (r0 a r12) en donde pueden operar las instrucciones de AND, ADD, MOV, etc. sobre 
 cualquier registro. Por ejemplo, la suma entre los registros r9 y r11: ADD r9, r11.
 
+8.	¿Qué ventajas presenta el uso de instrucciones de ejecución condicional (IT)? Dé un ejemplo.
+
+A la instrucción se le agrega sufijo que la hace condicional, siendo un NOP la próxima instrucción a ejecutarse en caso de no cumplir la condición. La ventaja de su 
+uso es que permite ejecutar un programa sin hacer saltos, mejorando la performance. Se pueden colocar hasta 4 sentencias condicionales. Por ejemplo:
+ITTE		NE
+ANDNE		r0, r0,r1
+ADDNE		r2, r2,#1
+MOVEQ		r2, r3
+
 10.	Describa las funciones principales de la pila. ¿Cómo resuelve la arquitectura el llamado a funciones y su retorno?
 
 • Push: copia el valor de un registro en la posición inferior a la apuntada por la pila (se decrementa). Luego el puntero queda en esa posición.

@@ -329,8 +329,8 @@
 @ void filtroVentana10(uint16_t * vectorIn, uint16_t * vectorOut, uint32_t longitudVectorIn)
 @
 @ Parametros recibidos:
-@   r0: * vector
-@   r1: * vector
+@   r0: * vectorIn
+@   r1: * vectorOut
 @	r2: longitud
 @
 @ Valor de retorno:
@@ -342,15 +342,15 @@
 
     push {r4}
     push {r5}
-    push {r6}
+    push {r6}			//indiceVentana
     push {r7}
     push {r8}
 	mov r3, 0			// indice
 
-		.ventana_loop1:
+		.ventana_while:
 
-			mov r4, 0			@ promedio
-			mov r5, 0			@ i=0 (for)
+			mov r4, 0			@ promedio lo vuelve a 0 en cada vuelta
+			mov r5, 0			@ i=0
 
 		.ventana_for:
 
@@ -358,27 +358,27 @@
 			cmp r6, r2			@ if(r6<longitud)
 			blt .ventana_salto	@ salgo condicional, Less Than
 								@ sino, ventana salió del arreglo
-			udiv r7, r6, r2		@ (indice+i) % longitudVectorIn
-			mul r7, r7, r2		@ indiceVentana = indiceVentana*longitud
-			sub r6, r6, r7		@ r6 = (indice+i)*indiceVentana
+			udiv r7, r6, r2		@ r7 = (indice+i) / longitudVectorIn
+			mul r7, r7, r2		@ r7 = r7*longitudVectorin
+			sub r6, r6, r7		@ r6 = (indice+i) % longitudVectorIn
 
 		.ventana_salto:
 
 			mov r8, 2
 			mul r6, r6, r8		@ (indice+i) = (indice+i)*2
 			add r6, r0, r6		@ (indice+1)*2+vectorIn
-			ldrh r8, [r6]		@ r8 <-- puntero a próximo elemento de vectorIn
-			add r4, r4, r8		@ promedio+=2
+			ldrh r8, [r6]		@ r8 <-- guarda valor apuntado a vectorIn
+			add r4, r4, r8		@ suma valor apuntado y acumula
 			add r5, 1			@ i++ (for)
 			cmp r5, 10			@ i<10 (for)
 			blt .ventana_for    @ vuelve a iniciar (for)
 
-			mov r8, 10
-			udiv r8, r4, r8
-			strh r8, [r1], 2
-			add r3, 1
-			cmp r3, r2
-			blt .ventana_loop1
+			mov r8, 10			@r8 = longitudVentana = 10
+			udiv r8, r4, r8		@r8 = sumaAcumulada/10 = promedio
+			strh r8, [r1], 2    @guarda en memoria r1 (vectorOut) el promedio e incrementa puntero
+			add r3, 1			@índice++
+			cmp r3, r2			@if(indice<longitudVectorin)
+			blt .ventana_while	@salto condicional Less Than
 
 	pop {r8}
     pop {r7}

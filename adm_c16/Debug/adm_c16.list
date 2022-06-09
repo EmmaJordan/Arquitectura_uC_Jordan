@@ -411,7 +411,7 @@ Disassembly of section .text:
  80002f2:	b410      	push	{r4}
     push {r5}
  80002f4:	b420      	push	{r5}
-    push {r6}
+    push {r6}			//indiceVentana
  80002f6:	b440      	push	{r6}
     push {r7}
  80002f8:	b480      	push	{r7}
@@ -420,30 +420,31 @@ Disassembly of section .text:
 	mov r3, 0			// indice
  80002fe:	f04f 0300 	mov.w	r3, #0
 
-08000302 <.ventana_loop1>:
+08000302 <.ventana_while>:
 
-		.ventana_loop1:
+		.ventana_while:
 
-			mov r4, 0			// promedio
+			mov r4, 0			@ promedio lo vuelve a 0 en cada vuelta
  8000302:	f04f 0400 	mov.w	r4, #0
-			mov r5, 0			// i
+			mov r5, 0			@ i=0
  8000306:	f04f 0500 	mov.w	r5, #0
 
-0800030a <.ventana_loop2>:
+0800030a <.ventana_for>:
 
-		.ventana_loop2:
+		.ventana_for:
 
-			add r6, r3, r5
+			add r6, r3, r5		@ r6 = indice+i
  800030a:	eb03 0605 	add.w	r6, r3, r5
-			cmp r6, r2
+			cmp r6, r2			@ if(r6<longitud)
  800030e:	4296      	cmp	r6, r2
-			blt .ventana_salto
+			blt .ventana_salto	@ salgo condicional, Less Than
  8000310:	db05      	blt.n	800031e <.ventana_salto>
-			udiv r7, r6, r2
+								@ sino, ventana salió del arreglo
+			udiv r7, r6, r2		@ r7 = (indice+i) / longitudVectorIn
  8000312:	fbb6 f7f2 	udiv	r7, r6, r2
-			mul r7, r7, r2
+			mul r7, r7, r2		@ r7 = r7*longitudVectorin
  8000316:	fb07 f702 	mul.w	r7, r7, r2
-			sub r6, r6, r7
+			sub r6, r6, r7		@ r6 = (indice+i) % longitudVectorIn
  800031a:	eba6 0607 	sub.w	r6, r6, r7
 
 0800031e <.ventana_salto>:
@@ -452,33 +453,33 @@ Disassembly of section .text:
 
 			mov r8, 2
  800031e:	f04f 0802 	mov.w	r8, #2
-			mul r6, r6, r8
+			mul r6, r6, r8		@ (indice+i) = (indice+i)*2
  8000322:	fb06 f608 	mul.w	r6, r6, r8
-			add r6, r0, r6
+			add r6, r0, r6		@ (indice+1)*2+vectorIn
  8000326:	4406      	add	r6, r0
-			ldrh r8, [r6]
+			ldrh r8, [r6]		@ r8 <-- guarda valor apuntado a vectorIn
  8000328:	f8b6 8000 	ldrh.w	r8, [r6]
-			add r4, r4, r8
+			add r4, r4, r8		@ suma valor apuntado y acumula
  800032c:	4444      	add	r4, r8
-			add r5, 1
+			add r5, 1			@ i++ (for)
  800032e:	f105 0501 	add.w	r5, r5, #1
-			cmp r5, 10
+			cmp r5, 10			@ i<10 (for)
  8000332:	2d0a      	cmp	r5, #10
-			blt .ventana_loop2
- 8000334:	dbe9      	blt.n	800030a <.ventana_loop2>
+			blt .ventana_for    @ vuelve a iniciar (for)
+ 8000334:	dbe9      	blt.n	800030a <.ventana_for>
 
-			mov r8, 10
+			mov r8, 10			@r8 = longitudVentana = 10
  8000336:	f04f 080a 	mov.w	r8, #10
-			udiv r8, r4, r8
+			udiv r8, r4, r8		@r8 = sumaAcumulada/10 = promedio
  800033a:	fbb4 f8f8 	udiv	r8, r4, r8
-			strh r8, [r1], 2
+			strh r8, [r1], 2    @guarda en memoria r1 (vectorOut) el promedio e incrementa puntero
  800033e:	f821 8b02 	strh.w	r8, [r1], #2
-			add r3, 1
+			add r3, 1			@índice++
  8000342:	f103 0301 	add.w	r3, r3, #1
-			cmp r3, r2
+			cmp r3, r2			@if(indice<longitudVectorin)
  8000346:	4293      	cmp	r3, r2
-			blt .ventana_loop1
- 8000348:	dbdb      	blt.n	8000302 <.ventana_loop1>
+			blt .ventana_while	@salto condicional Less Than
+ 8000348:	dbdb      	blt.n	8000302 <.ventana_while>
 
 	pop {r8}
  800034a:	f85d 8b04 	ldr.w	r8, [sp], #4

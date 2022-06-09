@@ -74,6 +74,13 @@ ANDNE		r0, r0,r1
 ADDNE		r2, r2,#1
 MOVEQ		r2, r3
 
+9.	Describa brevemente las excepciones más prioritarias (reset, NMI, Hardfault). 
+
+Reset, NMI y HardFault, en ese orden, son las excepciones más prioritarias, según su posición (de menor a mayor) en la tabla de vectores de interrupción.
+-	Reset (prioridad -3): excepción que se ejecuta cuando el microprocesador se reinicia, ya sea Power-on o Local.
+-	NMI (prioridad -2): son interrupciones no enmascarables, por lo que no pueden deshabilitarse. Si ocurre un error en otro handler, se dispara un NMI. Se puede generar por hardware, o una excepción de NMI por software. 
+-	Hardfault (prioridad -1): HardFault es la falla genérica que existe para todas las clases de fallas que no pueden ser manejadas por ninguno de los otros mecanismos de excepción, tales como división por 0, acceso indebido a memoria, etc.
+
 10.	Describa las funciones principales de la pila. ¿Cómo resuelve la arquitectura el llamado a funciones y su retorno?
 
 • Push: copia el valor de un registro en la posición inferior a la apuntada por la pila (se decrementa). Luego el puntero queda en esa posición.

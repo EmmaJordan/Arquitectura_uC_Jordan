@@ -13,6 +13,7 @@
 .global asm_max
 .global asm_invertir
 .global asm_filtroVentana10
+.global asm_downsampleM
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -386,4 +387,46 @@
     pop {r5}
     pop {r4}
 
+	bx lr
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@ void downsampleM (int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud, uint32_t N);
+@
+@ Parametros recibidos:
+@   r0: * vector
+@   r1: * vector
+@	r2: longitud
+@	r3: N
+@
+@ Valor de retorno:
+@   Ninguno
+@
+.thumb_func
+
+	asm_downsampleM:
+	push {r4}
+	push {r5}
+	mov r4, 1			// index
+
+	.ds_loop1:
+
+		ldr r5, [r0], 4
+		cmp r4, r3
+		beq .ds_skip1
+		str r5, [r1], 4
+		bal .ds_skip2
+
+	.ds_skip1:
+
+		mov r4, 0
+
+	.ds_skip2:
+
+		add r4, 1
+		subs r2, 1
+		bne .ds_loop1
+
+	pop {r5}
+	pop {r4}
 	bx lr

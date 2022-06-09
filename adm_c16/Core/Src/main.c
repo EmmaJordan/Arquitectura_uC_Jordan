@@ -212,6 +212,8 @@ int main(void)
   llenaArregloSignado1(miArregloSignado,miLongitud);
   llenaArregloSignado2(miArregloSignado_out,miLongitud);
   downsampleM(miArregloSignado,miArregloSignado_out,miLongitud,3);
+  llenaArregloSignado2(miArregloSignado_out,miLongitud);
+  asm_downsampleM(miArregloSignado,miArregloSignado_out,miLongitud,3);
   //llenaArreglo16(miArreglo16,miLongitud);
   //asm_downsampleM(miArreglo16,miArreglo16_out,miLongitud);
   /* Infinite loop */

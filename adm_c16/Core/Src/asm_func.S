@@ -405,28 +405,31 @@
 .thumb_func
 
 	asm_downsampleM:
-	push {r4}
-	push {r5}
-	mov r4, 1			// index
 
-	.ds_loop1:
+	push {r4}				@ indiceN
+	push {r5}				@ indiceOut
 
-		ldr r5, [r0], 4
-		cmp r4, r3
-		beq .ds_skip1
-		str r5, [r1], 4
-		bal .ds_skip2
+	mov r4, 1
 
-	.ds_skip1:
+	.downSample_for:
 
-		mov r4, 0
+		ldr r5, [r0], 4		@ r5 = *vectorIn; *vectorIn++;
+		cmp r4, r3			@ if ( indiceN==N )
+		beq .downSample_1	@ salto condicional Equal
+		str r5, [r1], 4		@ vectorOut = *vectorIn; *vectorOut++
+		bal .downSample_2	@ salto condicional Any Value
 
-	.ds_skip2:
+	.downSample_1:
 
-		add r4, 1
-		subs r2, 1
-		bne .ds_loop1
+		mov r4, 0			@ índiceN = 1
 
+	.downSample_2:
+
+		add  r4, 1			@ índiceN++
+		subs r2, 1			@ longitud --
+		bne .downSample_for @ salto condicional Not Equal (for)
+
+	pop {r6}
 	pop {r5}
 	pop {r4}
 	bx lr

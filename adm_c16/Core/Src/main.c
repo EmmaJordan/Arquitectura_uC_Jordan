@@ -19,7 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "string.h"
-
+#include "stdio.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "c_func.h"
@@ -153,13 +153,14 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_ETH_Init();
+
+
   MX_USART3_UART_Init();
-  //printf("HOLA\r\n");
   MX_USB_OTG_FS_PCD_Init();
+  printf("HOLA\r\n");
   /* USER CODE BEGIN 2 */
   PrivilegiosSVC ();
 
-  //const uint32_t Resultado = asm_sum (5, 3);
   /* USER CODE END 2 */
   uint32_t miLongitud = 20;
   uint32_t miEscalar1  = 3;
@@ -167,6 +168,7 @@ int main(void)
   uint32_t miEscalar3  = 100;
   uint32_t miArreglo32[miLongitud];
   uint16_t miArreglo16[miLongitud];
+  uint16_t miArreglo16_out[miLongitud];
   int32_t  miArregloSignado[miLongitud];
   //uint32_t miArreglo4[miLongitud];
 
@@ -192,12 +194,16 @@ int main(void)
   int32_t numMax = 0;
   numMax = max(miArregloSignado,miLongitud);
   numMax = asm_max(miArregloSignado,miLongitud);
+  numMax++;
 
   //invertir
   llenaArreglo16(miArreglo16,miLongitud);
   invertir(miArreglo16,miLongitud);
   asm_invertir(miArreglo16,miLongitud);
 
+  //filtroVentana
+  llenaArreglo16(miArreglo16,miLongitud);
+  filtroVentana10(miArreglo16,miArreglo16_out,miLongitud);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   char miChar = 'a';
@@ -205,6 +211,7 @@ int main(void)
   {
     /* USER CODE END WHILE */
 	  miChar++;
+	  printf("HOLA %c\r\n",miChar);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

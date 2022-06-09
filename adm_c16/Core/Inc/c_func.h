@@ -28,4 +28,7 @@ int32_t max (int32_t * vectorIn, uint32_t longitud);
 
 void invertir (uint16_t * vector, uint32_t longitud);
 
+void filtroVentana10(uint16_t * vectorIn, uint16_t * vectorOut, uint32_t longitudVectorIn);
+
+
 #endif /* INC_C_FUNC_H_ */

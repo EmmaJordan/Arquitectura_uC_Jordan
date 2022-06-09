@@ -82,9 +82,7 @@ int32_t max (int32_t * vectorIn, uint32_t longitud)
         	valorMaximo  = vectorIn[longitud];
         	indiceMaximo = longitud;
         }
-
     }
-
     return indiceMaximo;
 }
 
@@ -101,5 +99,35 @@ void invertir (uint16_t * vector, uint32_t longitud)
 		vector[i1] = aux;
 		i1++;
 		i2--;
+	}
+}
+
+void filtroVentana10(uint16_t * vectorIn, uint16_t * vectorOut, uint32_t longitudVectorIn)
+{
+	uint8_t longitudVentana = 10;
+	uint32_t indice = 0;
+	uint32_t indiceVentana = 0;
+	uint32_t suma = 0;
+	uint32_t promedio = 0;
+	while(indice < longitudVectorIn) // desde 0 hasta 7
+	{
+
+		for(uint8_t i = 0; i<longitudVentana; i++) // desde 0 hasta 3
+		{
+			if( (indice+i) < longitudVectorIn)
+			{
+				indiceVentana = (indice+i);
+			}
+			else
+			{
+				indiceVentana = (indice+i) % longitudVectorIn;
+			}
+			suma += vectorIn[indiceVentana];
+		}
+
+		promedio = (float) suma/longitudVentana;
+		vectorOut[indice] = promedio;
+		indice++;
+		suma = 0;
 	}
 }

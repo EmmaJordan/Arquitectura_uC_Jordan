@@ -162,7 +162,7 @@
 	push {r5}
 	push {r6}
 	mov r6, #0x0FFF		//valor a saturar
-    .loop12:
+    .asm_productoEscalar12_loop12:
 		    	ldrh  	r4, [r0], 2 	@ carga un registro r4 con un valor de memoria r0 y luego r0+=2;
 		    							@ es decir, carga en r4 lo que hay en r0 (*vectorIn) e incrementa el puntero de vectorIn
 		    	mul 	r5, r4,  r3  	@ multiplica r4 por r3 (escalar) y lo guarda en r5
@@ -177,13 +177,13 @@
 				strh  	r5, [r1], 2		@ carga en memoria r1 lo que tengo en r5 y luego r1+=2; <----
 										@ es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
 		    	subs 	r2, 1      		@ decrementa en 1 a r2 (longitud--)
-		        bne		.loop12			@ vuelve a .loop12, ejecución condicional (Not Equal, es decir Z=0)
+		        bne		.asm_productoEscalar12_loop12			@ vuelve a .loop12, ejecución condicional (Not Equal, es decir Z=0)
 
-				pop {r6}
-		        pop {r5}
-		        pop {r4}
+	pop {r6}
+    pop {r5}
+    pop {r4}
 
-		        bx lr
+    bx lr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -215,10 +215,10 @@
     	subs 	r2, 1      		@decrementa en 1 a r2 (longitud--)
         bne		.loop12_usat	@vuelve a .loop12, ejecución condicional (Not Equal, es decir Z=0)
 
-        pop {r9}
-        pop {r8}
+    pop {r9}
+    pop {r8}
 
-        bx lr
+    bx lr
 
         @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -247,33 +247,34 @@
 
 	    asm_max:
 
-	    	push {r4}
-	    	push {r5}
+    	push {r4}
+    	push {r5}
 
-	    	ldr r2, [r0], 4    	@ guardo en r2=*r0 (primer elemento del arreglo) e incremento puntero
-	    	mov r3, 1			@ r3 = 1; --> índice Máximo inicial
-	    	mov r4, 1			@ r4 = 1;
-			subs r1, 1			@ r1-= 1; longitud--;
-	        beq .endMax			@ salto condicional Equal (Z=1) --> if(longitud==0) goto endMax
+    	ldr r2, [r0], 4    		@ guardo en r2=*r0 (primer elemento del arreglo) e incremento puntero
+    	mov r3, 1				@ r3 = 1; --> índice Máximo inicial
+    	mov r4, 1				@ r4 = 1;
+		subs r1, 1				@ r1-= 1; longitud--;
+        beq .endMax				@ salto condicional Equal (Z=1) --> if(longitud==0) goto endMax
 
 		.loopMax:
-			add r4, 1			@r4+=1; --> r4 = 2;
-			ldr r5, [r0], 4		@r5 = *r0
-			cmp r2, r5			@comparo elemento actual con anterior
-			bgt .salto			@salto condicional Greater Than signed (Z=0, N=V) --> si encontré un nuevo máximo, goto salto
-			mov r2, r5			@actualizo elemento actual
-			mov r3, r4			@actualizo índice Máximo
+			add r4, 1			@ r4+=1; --> r4 = 2;
+			ldr r5, [r0], 4		@ r5 = *r0
+			cmp r2, r5			@ comparo elemento actual con anterior
+			bgt .saltoMax		@ salto condicional Greater Than signed (Z=0, N=V) --> si encontré un nuevo máximo, goto salto
+			mov r2, r5			@ actualizo elemento actual
+			mov r3, r4			@ actualizo índice Máximo
 
-		.salto:
+		.saltoMax:
 	    	subs r1, 1			@ r1-= 1; longitud--;
 	        bne	.loopMax		@ salto condicional Not Equal (Z=0) --> if(longitud!=1) goto loopMax
 
 	    .endMax:
 	        sub r3, 1
-	        mov r0, r3			@guardo en valor de retorno el índice máximo
-	        pop {r5}
-	        pop {r4}
-	    	bx lr
+	        mov r0, r3			@ guardo en valor de retorno el índice máximo
+
+	    pop {r5}
+	    pop {r4}
+		bx lr
 
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -307,7 +308,7 @@
     	//r0 <-- puntero a primer elemento
     	//r4 <-- puntero a último elemento
 
-    .loop_invertir:
+	.loop_invertir:
 
     	ldrh r2, [r0]		@r2 = *vector[0]				//guarda en r2 el primer elemento
     	ldrh r3, [r4]		@r3 = *vector[longitud-1]		//guarda en r3 el último elemento

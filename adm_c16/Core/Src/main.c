@@ -204,6 +204,8 @@ int main(void)
   //filtroVentana
   llenaArreglo16(miArreglo16,miLongitud);
   filtroVentana10(miArreglo16,miArreglo16_out,miLongitud);
+  llenaArreglo16(miArreglo16,miLongitud);
+  asm_filtroVentana10(miArreglo16,miArreglo16_out,miLongitud);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   char miChar = 'a';

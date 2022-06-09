@@ -12,6 +12,7 @@
 .global asm_productoEscalar12_usat
 .global asm_max
 .global asm_invertir
+.global asm_filtroVentana10
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -322,3 +323,67 @@
 
         pop {r4}
         bx lr
+
+        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@ void filtroVentana10(uint16_t * vectorIn, uint16_t * vectorOut, uint32_t longitudVectorIn)
+@
+@ Parametros recibidos:
+@   r0: * vector
+@   r1: * vector
+@	r2: longitud
+@
+@ Valor de retorno:
+@   Ninguno
+@
+.thumb_func
+
+	asm_filtroVentana10:
+
+    push {r4}
+    push {r5}
+    push {r6}
+    push {r7}
+    push {r8}
+	mov r3, 0			// indice
+
+		.ventana_loop1:
+
+			mov r4, 0			@ promedio
+			mov r5, 0			@ i=0 (for)
+
+		.ventana_for:
+
+			add r6, r3, r5		@ r6 = indice+i
+			cmp r6, r2			@ if(r6<longitud)
+			blt .ventana_salto	@ salgo condicional, Less Than
+								@ sino, ventana salió del arreglo
+			udiv r7, r6, r2		@ (indice+i) % longitudVectorIn
+			mul r7, r7, r2		@ indiceVentana = indiceVentana*longitud
+			sub r6, r6, r7		@ r6 = (indice+i)*indiceVentana
+
+		.ventana_salto:
+
+			mov r8, 2
+			mul r6, r6, r8		@ (indice+i) = (indice+i)*2
+			add r6, r0, r6		@ (indice+1)*2+vectorIn
+			ldrh r8, [r6]		@ r8 <-- puntero a próximo elemento de vectorIn
+			add r4, r4, r8		@ promedio+=2
+			add r5, 1			@ i++ (for)
+			cmp r5, 10			@ i<10 (for)
+			blt .ventana_for    @ vuelve a iniciar (for)
+
+			mov r8, 10
+			udiv r8, r4, r8
+			strh r8, [r1], 2
+			add r3, 1
+			cmp r3, r2
+			blt .ventana_loop1
+
+	pop {r8}
+    pop {r7}
+	pop {r6}
+    pop {r5}
+    pop {r4}
+
+	bx lr

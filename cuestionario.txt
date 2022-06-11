@@ -164,6 +164,8 @@ la función que se ha llamado actualmente.
 5. ¿Qué es una instrucción SIMD? ¿En qué se aplican y que ventajas reporta su uso? Dé un ejemplo.
 
 Una SIMD (Single Instruction Multiple Data) es una instrucción que realiza una misma operación sobre más de un dato. Su implementación permite llevar a cabo paralelismo 
-a nivel de datos.
+a nivel de datos. Por ejemplo, la instrucción sadd16 ro, r1, r2 permite sumar por separado: los primeros elementos de r1 y de r2 (16 bits cada uno) y guardar la suma en el 
+primer elemento de r0 (16 bits), y los segundos elementos de r1 y de r2 (16 bits) y guardar el resultado en el segundo elemento de ro (16 bits). La operación de un par de
+elementos no influye sobre el otro (por ejemplo, el traslado de un carry de la primera operación sobre el segundo elemento, como ocurriría en una instrucción add).
 
 

@@ -38,6 +38,24 @@ void llenaArregloSignado2(int32_t *vectorOut, uint32_t longitud)
 	}
 }
 
+void llenaArregloSignado16(int16_t *vectorOut, uint32_t longitud)
+{
+	while(longitud--)
+	{
+		vectorOut[longitud] = -1;
+	}
+}
+
+void llenaArregloSignado32(int32_t *vectorOut, uint32_t longitud)
+{
+	int32_t i=-10000;
+	while(longitud--)
+	{
+		vectorOut[longitud] = i;
+		i=i+30000;
+	}
+}
+
 void llenaArregloSignado(int32_t *vectorOut, uint32_t longitud)
 {
 	int32_t i=70;
@@ -167,4 +185,12 @@ void downsampleM(int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud, uin
 			indiceN ++;
 		}
 	}
+}
+
+void pack32to16 (int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud)
+{
+    while(longitud--)
+    {
+        vectorOut[longitud] = vectorIn[longitud] >> 16;
+    }
 }

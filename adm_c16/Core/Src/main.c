@@ -162,7 +162,7 @@ int main(void)
   PrivilegiosSVC ();
 
   /* USER CODE END 2 */
-  uint32_t miLongitud = 20;
+  uint32_t miLongitud = 16;
   uint32_t miEscalar1  = 3;
   uint32_t miEscalar2  = 10;
   uint32_t miEscalar3  = 100;
@@ -172,10 +172,13 @@ int main(void)
   int32_t  miArregloSignado[miLongitud];
   int32_t  miArregloSignado_out[miLongitud];
 
-  zeros(miArreglo32,miLongitud);
   llenaArreglo32(miArreglo32,miLongitud);
   llenaArreglo16(miArreglo16,miLongitud);
   llenaArregloSignado(miArregloSignado,miLongitud);
+
+  //zeros
+  zeros(miArreglo32,miLongitud);
+  asm_zeros(miArreglo32,miLongitud);
 
   //32 bits
   productoEscalar32(miArreglo32,miArreglo32,miLongitud,miEscalar1);
@@ -214,8 +217,15 @@ int main(void)
   downsampleM(miArregloSignado,miArregloSignado_out,miLongitud,3);
   llenaArregloSignado2(miArregloSignado_out,miLongitud);
   asm_downsampleM(miArregloSignado,miArregloSignado_out,miLongitud,3);
-  //llenaArreglo16(miArreglo16,miLongitud);
-  //asm_downsampleM(miArreglo16,miArreglo16_out,miLongitud);
+
+  //empaqueta
+  int32_t  miArregloSignado32[miLongitud];
+  int16_t  miArregloSignado16[miLongitud];
+
+  llenaArregloSignado32(miArregloSignado32,miLongitud);
+  llenaArregloSignado16(miArregloSignado16,miLongitud);
+  pack32to16(miArregloSignado32,miArregloSignado16,miLongitud);
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   char miChar = 'a';

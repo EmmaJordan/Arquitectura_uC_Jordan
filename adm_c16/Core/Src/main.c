@@ -225,7 +225,7 @@ int main(void)
   llenaArregloSignado32(miArregloSignado32,miLongitud);
   llenaArregloSignado16(miArregloSignado16,miLongitud);
   pack32to16(miArregloSignado32,miArregloSignado16,miLongitud);
-
+  asm_pack32to16(miArregloSignado32,miArregloSignado16,miLongitud);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   char miChar = 'a';

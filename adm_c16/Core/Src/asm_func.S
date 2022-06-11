@@ -14,6 +14,7 @@
 .global asm_invertir
 .global asm_filtroVentana10
 .global asm_downsampleM
+.global asm_pack32to16
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -432,4 +433,30 @@
 	pop {r6}
 	pop {r5}
 	pop {r4}
+	bx lr
+
+	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@ void pack32to16 (int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud);
+@
+@ Parametros recibidos:
+@   r0: * vectorIn
+@   r1: * vectorOut
+@	r2: longitud
+@
+@ Valor de retorno:
+@   Ninguno
+@
+.thumb_func
+
+asm_pack32to16:
+
+add r0, 2
+
+.pack32to16_while:
+
+	ldrh r3, [r0], 4		@r3 = *vectorIn (parte alta h), *vectorIn++; (4 bytes)
+	strh r3, [r1], 2		@vectorOut = *vectorIn; vectorOut++; (2 bytes)
+	subs r2, 1          	@ --longitud
+    bne	.pack32to16_while
 	bx lr

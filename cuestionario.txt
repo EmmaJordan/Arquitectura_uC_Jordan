@@ -86,11 +86,28 @@ cualquier registro. Por ejemplo, la suma entre los registros r9 y r11: ADD r9, r
 8.	¿Qué ventajas presenta el uso de instrucciones de ejecución condicional (IT)? Dé un ejemplo.
 
 A la instrucción se le agrega sufijo que la hace condicional, siendo un NOP la próxima instrucción a ejecutarse en caso de no cumplir la condición. La ventaja de su 
-uso es que permite ejecutar un programa sin hacer saltos, mejorando la performance. Se pueden colocar hasta 4 sentencias condicionales. Por ejemplo:
-ITTE		NE
-ANDNE		r0, r0,r1
-ADDNE		r2, r2,#1
-MOVEQ		r2, r3
+uso es que permite ejecutar un programa sin hacer saltos, mejorando la performance. Se pueden colocar hasta 4 sentencias condicionales.
+
+El siguiente ejemplo utiliza y ubica el máximo de cuatro instrucciones posibles en los bloques “then” o “else”:
+
+ittte ne
+addne 	r7,#5          	// then
+andne 	r7, r8         		// then
+movne 	r7, r9         		// then
+moveq 	r7,#0xDE       	// else (se especifica la condición inversa a NE)
+
+Equivalente en C:
+
+if (NE)
+{
+	add 	r7,#5
+	and 	r7, r8
+	mov 	r7, r9
+}
+else 
+{
+	mov r7, 0xDE
+}
 
 9.	Describa brevemente las excepciones más prioritarias (reset, NMI, Hardfault). 
 

@@ -162,7 +162,7 @@ int main(void)
   PrivilegiosSVC ();
 
   /* USER CODE END 2 */
-  uint32_t miLongitud = 16;
+  uint32_t miLongitud = 10;
   uint32_t miEscalar1  = 3;
   uint32_t miEscalar2  = 10;
   uint32_t miEscalar3  = 100;
@@ -226,6 +226,17 @@ int main(void)
   llenaArregloSignado16(miArregloSignado16,miLongitud);
   pack32to16(miArregloSignado32,miArregloSignado16,miLongitud);
   asm_pack32to16(miArregloSignado32,miArregloSignado16,miLongitud);
+
+  //correlación
+  int16_t  vectorX[miLongitud];
+  int16_t  vectorY[miLongitud];
+  int16_t  vectorCorr[miLongitud];
+
+  llenaVectorX(vectorX,miLongitud);
+  llenaVectorY(vectorY,miLongitud);
+  llenaArregloSignado16(vectorCorr,miLongitud);
+
+  corr(vectorX,vectorY,vectorCorr,miLongitud);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   char miChar = 'a';

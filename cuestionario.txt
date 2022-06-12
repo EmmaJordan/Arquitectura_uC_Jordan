@@ -1,9 +1,19 @@
+Respuestas a preguntas orientadoras
+Arquitectura de Microprocesadores
+Carrera de Especialización en Sistemas Embebidos
+FIUBA 2022
+
+Jordán Joan Emmanuel
+
+
 Glosario
 
 SO: sistema operativo
 SE: sistema embebido
 RT: tiempo real, la aplicación asegura cumplir los dead lines. Esa garantía la da el SO y el procesador.
 ALU: unidad aritmético lógica
+PC: contador de programa
+SP: stack pointer
 
 Preguntas orientadoras
 

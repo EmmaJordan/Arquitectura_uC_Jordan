@@ -116,20 +116,13 @@ tendrá dichos periféricos embebidos en el core, además de los periféricos ex
 
 13.	¿Cómo se implementan las prioridades de las interrupciones? Dé un ejemplo.
 
-Las interrupciones se implementan sobre un arreglo, con mayor prioridad a menor índice. La prioridad de las interrupciones se puede elegir, excepto para reset, 
-NMI y HardFault, cuyas posiciones en el arreglo son fijas (índice -3, -2 y -1). Al habilitar interrupciones, se les debe asignar una posición en dicho arreglo. 
-
-Por ejemplo, si tenemos habilitadas tres interrupciones correspondientes a: 
+Las interrupciones se implementan sobre un arreglo, con mayor prioridad a menor índice. La prioridad de las interrupciones se puede elegir, excepto para reset, NMI 
+y HardFault, cuyas posiciones en el arreglo son fijas (índice -3, -2 y -1). Al habilitar interrupciones, se les debe asignar una posición en dicho arreglo. Por ejemplo, si 
+tenemos habilitadas tres interrupciones correspondientes a: 
 A)	interrupción externa en el índice 0x40, 
 B)	conversor A/D en el índice 0x60
 C)	desborde de timer en el índice 0x80
-Al ocurrir el evento de alguna de las interrupciones habilitadas, al levantarse el flag correspondiente, del programa principal se salta a la rutina de interrupción 
-de servicio (ISR) asociada a la interrupción. Por ejemplo, el programa se está ejecutando en el main y ocurre una interrupción B, se saltará a la ISR de B. 
-Si durante la ejecución de B, ocurre una interrupción A (mayor prioridad), B es interrumpida para saltar a la ISR de A (de igual manera que se saltó del main a 
-la ISR de B). Al finalizar la ISR de A, se volverá a la ISR de B y, al finalizar ésta se volverá a la rutina del main en el punto en el que se había quedado.
-Por el contrario, si durante la ejecución de B, ocurre una interrupción C (menor prioridad), B se terminará de ejecutar completa y recién en ese momento se 
-saltará a la ISR de C. A su vez, dentro de la ISR de C podrá ser interrumpida por A y B.  Si no hay nueva interrupción, al finalizar la ISR de C se volverá a la rutina 
-del main en el punto en el que se había quedado.
+La interrupción A tendrá mayor prioridad que las interrupciones B y C, y a su vez la interrupción B tendrá mayor prioridad que la interrupción C.
 
 14.	¿Qué es el CMSIS? ¿Qué función cumple? ¿Quién lo provee? ¿Qué ventajas aporta? 
 

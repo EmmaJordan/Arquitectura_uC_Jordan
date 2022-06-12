@@ -68,6 +68,14 @@ un registro, y luego se lo debe guardar en un registro para pasarlo nuevamente a
 El mapa de memoria de los Cortex M es plano de 4GB. Presenta secciones definidas para el programa, la memoria RAM, los periféricos, etc. Cada sección comienza 
 en un determinado lugar de la memoria representado con un offset.
 
+6.	Describa los diferentes modos de privilegio y operación del Cortex M, sus relaciones y cómo se conmuta de uno al otro. Describa un ejemplo en el que se 
+pasa del modo privilegiado a no privilegiado y nuevamente a privilegiado.
+
+Existen dos modos de operación de los procesadores Cortex M, el modo usuario (no privilegiado) y el modo supervisor (privilegiado).
+El modo privilegiado brinda un acceso y control total de las instrucciones del procesador y recursos de la arquitectura. 
+El modo no privilegiado es aquel en el que corren las aplicaciones, y dicho acceso es restringido, es decir, el sistema operativo puede asignar recursos del sistema a 
+la aplicación, ya sea como privados o compartidos. Este modo brinda protección frente a otros procesos y tareas.
+
 7.	¿Qué se entiende por modelo de registros ortogonal? Dé un ejemplo.
 
 En un modelo de registros ortogonal, todos los registros (excepto stack pointer, link register y program counter) pueden ser utilizados de forma indistinta por las 

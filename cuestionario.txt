@@ -131,6 +131,21 @@ de manera más amigable, sin tener que interactuar de manera directa con los reg
 Permite poner a andar los periféricos internos en poco tiempo y con el respaldo del fabricante del microcontrolador, quien lo provee, con documentación 
 respaldatoria del mismo y de toda una comunidad de usuarios.
 
+15.	Cuando ocurre una interrupción, asumiendo que está habilitada ¿Cómo opera el microprocesador para atender a la subrutina correspondiente? Explique 
+con un ejemplo.
+
+Si tenemos habilitadas tres interrupciones correspondientes a: 
+A)	interrupción externa en el índice 0x40, 
+B)	conversor A/D en el índice 0x60
+C)	desborde de timer en el índice 0x80
+Al ocurrir el evento de alguna de las interrupciones habilitadas, al levantarse el flag correspondiente, del programa principal se salta a la rutina de interrupción de 
+servicio (ISR) asociada a la interrupción. Por ejemplo, el programa se está ejecutando en el main y ocurre una interrupción B, se saltará a la ISR de B. 
+Si durante la ejecución de B, ocurre una interrupción A (mayor prioridad), B es interrumpida para saltar a la ISR de A (de igual manera que se saltó del main a la ISR 
+de B). Al finalizar la ISR de A, se volverá a la ISR de B y, al finalizar ésta se volverá a la rutina del main en el punto en el que se había quedado.
+Por el contrario, si durante la ejecución de B, ocurre una interrupción C (menor prioridad), B se terminará de ejecutar completa y recién en ese momento se saltará 
+a la ISR de C. A su vez dentro de la ISR de C podrá ser interrumpida por A y B.  Si no hay nueva interrupción, al finalizar la ISR de C de volverá a la rutina del main en 
+el punto en el que se había quedado.
+
 17.	¿Qué es el systick? ¿Por qué puede afirmarse que su implementación favorece la portabilidad de los sistemas operativos embebidos? 
 
 El systick es un timer en el procesador, que genera una interrupción constante con una periodicidad de 1ms. Permite medir tiempos, así como también asignar tareas 

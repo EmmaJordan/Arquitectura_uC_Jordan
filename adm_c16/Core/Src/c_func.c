@@ -22,6 +22,26 @@ void llenaArreglo16(uint16_t *vectorOut, uint32_t longitud)
 	}
 }
 
+void llenaArregloS1(int16_t *vectorOut, uint32_t longitud)
+{
+	int16_t i = 10;
+	while(longitud--)
+	{
+		vectorOut[longitud] = i;
+		i-=3;
+	}
+}
+
+void llenaArregloS2(int16_t *vectorOut, uint32_t longitud)
+{
+	int16_t i = 13;
+	while(longitud--)
+	{
+		vectorOut[longitud] = i;
+		i-=4;
+	}
+}
+
 void llenaArregloSignado1(int32_t *vectorOut, uint32_t longitud)
 {
 	while(longitud--)
@@ -216,7 +236,7 @@ void pack32to16 (int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud)
     }
 }
 
-void corr (int16_t *vectorX, int16_t *vectorY, int16_t *vectorCorr, uint32_t longitud)
+void corr (int16_t *vectorX, int16_t *vectorY, int32_t *vectorCorr, uint32_t longitud)
 {
 	uint32_t longitudVector = longitud;
 	while(longitud--)

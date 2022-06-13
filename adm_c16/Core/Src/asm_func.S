@@ -15,6 +15,8 @@
 .global asm_filtroVentana10
 .global asm_downsampleM
 .global asm_pack32to16
+.global asm_fusion
+.global asm_corr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -130,10 +132,10 @@
 	push {r9}
 
     .loop16:
-    	ldrh	r8, [r0], 2 	@carga un registro r8 con un valor de memoria r0 y luego r0+=4;
+    	ldrh	r8, [r0], 2 	@carga un registro r8 con un valor de memoria r0 y luego r0+=2;
     							@es decir, carga en r8 lo que hay en r0 (*vectorIn) e incrementa el puntero de vectorIn
     	mul 	r9, r8, r3  	@multiplica r8 por r3 (escalar) y lo guarda en r6
-		strh 	r9, [r1], 2 	@carga en memoria r1 lo que tengo en r9 y luego r1+=4;
+		strh 	r9, [r1], 2 	@carga en memoria r1 lo que tengo en r9 y luego r1+=2;
 								@es decir, carga en r1 vectorIn[0]*escalar e incrementa el puntero de vectorOut
     	subs 	r2, 1      		@decrementa en 1 a r2 (longitud--)
         bne		.loop16			@vuelve a .loop16, ejecución condicional (Not Equal, es decir Z=0)
@@ -458,5 +460,110 @@ add r0, 2
 	ldrh r3, [r0], 4		@r3 = *vectorIn (parte alta h), *vectorIn++; (4 bytes)
 	strh r3, [r1], 2		@vectorOut = *vectorIn; vectorOut++; (2 bytes)
 	subs r2, 1          	@ --longitud
-    bne	.pack32to16_while
+    bne	.pack32to16_while   @salto condicional Not Equal
 	bx lr
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@ void fusion(int16_t *salida, int16_t *s1, int16_t *s2, uint16_t cant);
+@
+@ Parametros recibidos:
+@   r0: *salida
+@   r1: *s1
+@	r2: *s2
+@	r3: cant
+@
+@ Valor de retorno:
+@   Ninguno
+@
+#define salida r0
+#define s1 r1
+#define s2 r2
+#define cant r3
+
+.thumb_func
+
+asm_fusion:
+//Ejemplo cantidad = 10
+push {r4-r5, lr}
+asr cant,1 			//shift un bit a la derecha --> cantidad = 5 (mitad de veces con instrucciones SIMD)
+sub cant,1			//longitud--; --> cantidad = 4 (loop 4 a 0)
+
+	fusion_while:
+		ldr r4, [s1, cant, LSL 2]   	@ cant = 4 --> r4 = *(s1+16)  <-- avanza de a 32 bits (guarda de 2 valores de 16 bits)
+										@ cant = 3 --> r4 = *(s1+12)
+										@ cant = 2 --> r4 = *(s1+8)
+										@ cant = 1 --> r4 = *(s1+4)
+										@ cant = 0 --> r4 = *(s1+0)
+
+		ldr r5, [s2, cant, LSL 2]   	@ cant = 4 --> r5 = *(s2+16)  <-- avanza de a 32 bits (guarda de a 2 valores de 16 bits)
+										@ cant = 3 --> r5 = *(s2+12)
+										@ cant = 2 --> r5 = *(s2+8)
+										@ cant = 1 --> r5 = *(s2+4)
+										@ cant = 0 --> r5 = *(s2+0)
+
+		shadd16 r5, r5, r4				@ instrucción SIMD semi-suma  <-- suma r4a con r5a y r4b con r5b
+
+		str r5, [salida, cant, LSL 2]	@ cant = 4 --> *(salida+16) = r5  <-- avanza de a 32 bits (carga de a 2 valores de 16 bits)
+										@ cant = 3 --> *(salida+12) = r5
+										@ cant = 2 --> *(salida+8)  = r5
+										@ cant = 1 --> *(salida+4)  = r5
+										@ cant = 0 --> *(salida+0)  = r5
+
+		subs cant, 1					@longitud--;
+		bpl fusion_while				@salto condicional Positive or Zero
+
+pop {r4-r5, pc}
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@ void fusion(int16_t *vectorX, int16_t *vectorY, int16_t *vectorCorr, uint32_t longitud);
+@
+@ Parametros recibidos:
+@   r0: *vectorX
+@   r1: *vectorY
+@	r2: *vectorCorr
+@	r3: longitud
+@
+@ Valor de retorno:
+@   Ninguno
+@
+
+#define vectorX 	r0
+#define vectorY 	r1
+#define vectorCorr	r2
+#define longitud 	r3
+
+.thumb_func
+
+asm_corr:
+//Ejemplo cantidad = 10
+push {r4-r6, lr}
+asr longitud,1 			//shift un bit a la derecha --> cantidad = 5 (mitad de veces con instrucciones SIMD)
+sub longitud,1			//longitud--; --> cantidad = 4 (loop 4 a 0)
+
+	corr_while:
+		ldr r4, [vectorX, longitud, LSL 2]   	@ longitud = 4 --> r4 = *(vectorX+16)  <-- avanza de a 32 bits (guarda de 2 valores de 16 bits)
+												@ longitud = 3 --> r4 = *(vectorX+12)
+												@ longitud = 2 --> r4 = *(vectorX+8)
+												@ longitud = 1 --> r4 = *(vectorX+4)
+												@ longitud = 0 --> r4 = *(vectorX+0)
+
+		ldr r5, [vectorY, longitud, LSL 2]   	@ longitud = 4 --> r5 = *(vectorY+16)  <-- avanza de a 32 bits (guarda de a 2 valores de 16 bits)
+												@ longitud = 3 --> r5 = *(vectorY+12)
+												@ longitud = 2 --> r5 = *(vectorY+8)
+												@ longitud = 1 --> r5 = *(vectorY+4)
+												@ longitud = 0 --> r5 = *(vectorY+0)
+
+		shadd16 r6, r5, r4						@ smuad: instrucción SIMD Signed Dual Multiply Add
+
+		str r6, [vectorCorr, longitud, LSL 2]	@ longitud = 4 --> *(vectorCorr+16) = r6  <-- avanza de a 32 bits (carga de a 2 valores de 16 bits)
+												@ longitud = 3 --> *(vectorCorr+12) = r5
+												@ longitud = 2 --> *(vectorCorr+8)  = r5
+												@ longitud = 1 --> *(vectorCorr+4)  = r5
+												@ longitud = 0 --> *(vectorCorr+0)  = r5
+
+		subs longitud, 1						@longitud--;
+		bpl corr_while							@salto condicional Positive or Zero
+
+pop {r4-r6, pc}

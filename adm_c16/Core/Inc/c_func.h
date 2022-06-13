@@ -24,6 +24,10 @@ void llenaArregloSignado1(int32_t *vectorOut, uint32_t longitud);
 
 void llenaArregloSignado2(int32_t *vectorOut, uint32_t longitud);
 
+void llenaArregloS1(int16_t *vectorOut, uint32_t longitud);
+
+void llenaArregloS2(int16_t *vectorOut, uint32_t longitud);
+
 void llenaVectorX(int16_t *vectorOut, uint32_t longitud);
 
 void llenaVectorY(int16_t *vectorOut, uint32_t longitud);
@@ -46,6 +50,6 @@ void downsampleM (int32_t * vectorIn, int32_t * vectorOut, uint32_t longitud, ui
 
 void pack32to16 (int32_t * vectorIn, int16_t *vectorOut, uint32_t longitud);
 
-void corr (int16_t *vectorX, int16_t *vectorY, int16_t *vectorCorr, uint32_t longitud);
+void corr (int16_t *vectorX, int16_t *vectorY, int32_t *vectorCorr, uint32_t longitud);
 
 #endif /* INC_C_FUNC_H_ */

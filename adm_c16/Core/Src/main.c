@@ -227,16 +227,26 @@ int main(void)
   pack32to16(miArregloSignado32,miArregloSignado16,miLongitud);
   asm_pack32to16(miArregloSignado32,miArregloSignado16,miLongitud);
 
+  //fusion
+  int16_t  s1[miLongitud];
+  int16_t  s2[miLongitud];
+  int16_t  salida[miLongitud];
+
+  llenaArregloS1(s1,miLongitud);
+  llenaArregloS2(s2,miLongitud);
+  llenaArregloSignado16(salida,miLongitud);
+  asm_fusion(salida,s1,s2,miLongitud);
+
   //correlación
   int16_t  vectorX[miLongitud];
   int16_t  vectorY[miLongitud];
   int16_t  vectorCorr[miLongitud];
 
-  llenaVectorX(vectorX,miLongitud);
-  llenaVectorY(vectorY,miLongitud);
+  llenaArregloS1(vectorX,miLongitud);
+  llenaArregloS2(vectorY,miLongitud);
   llenaArregloSignado16(vectorCorr,miLongitud);
 
-  corr(vectorX,vectorY,vectorCorr,miLongitud);
+  asm_corr(vectorX,vectorY,vectorCorr,miLongitud);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   char miChar = 'a';

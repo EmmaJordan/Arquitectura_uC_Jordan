@@ -125,6 +125,14 @@ Nota: la pila crece hacia abajo.
 El stack pointer tiene otras funciones como swap, peek, duplicate y rotate. Por ejemplo, en swap se intercambian las posiciones de los últimos dos valores de la pila, 
 en peek se recupera el próximo valor del stack en un registro (similar a pop, pero sin incrementar el puntero a la siguiente posición disponible), etc. 
 
+11.	Describa la secuencia de reset del microprocesador. 
+
+Existen tres formas de reseteo del microprocesador: power on reset, system reset y processor reset. Luego de que se detecte cualquiera de estas formas y antes de 
+que el procesador comience a ejecutar el programa en memoria, la secuencia de reset es:
+•Se lee la primera posición del mapa de memoria, correspondiente a la dirección inicial del MSP (main stack pointer).
+•Se lee la segunda posición del mapa de memoria, correspondiente al vector de reset (inicio del reset handler).
+•El procesador guarda las dos direcciones leídas en el MSP y el PC, respectivamente.
+
 12.	¿Qué entiende por “core peripherals”? ¿Qué diferencia existe entre estos y el resto de los periféricos? 
 
 Son los periféricos diseñados e implementados por el fabricante del núcleo (ARM). A diferencia del resto de los periféricos, estos se encuentran físicamente en el 
@@ -163,14 +171,14 @@ Por el contrario, si durante la ejecución de B, ocurre una interrupción C (men
 a la ISR de C. A su vez dentro de la ISR de C podrá ser interrumpida por A y B.  Si no hay nueva interrupción, al finalizar la ISR de C de volverá a la rutina del main en 
 el punto en el que se había quedado.
 
-17.	¿Qué es el systick? ¿Por qué puede afirmarse que su implementación favorece la portabilidad de los sistemas operativos embebidos? 
+18.	¿Qué es el systick? ¿Por qué puede afirmarse que su implementación favorece la portabilidad de los sistemas operativos embebidos? 
 
 El systick es un timer en el procesador, que genera una interrupción constante con una periodicidad de 1ms. Permite medir tiempos, así como también asignar tareas 
 dentro de su rutina de interrupción asociada. En base a este tiempo, se pueden gestionar cambios entre una y otra tarea en ejecución. 
 Su implementación favorece la portabilidad de los SO embebidos ya que todos los microcontroladores, de cualquier fabricante, con licencia de núcleo ARM, tienen 
 este mismo timer en el procesador, por lo que se fomenta su buen uso en lugar de un timer externo.
 
-18.	¿Qué funciones cumple la unidad de protección de memoria (MPU)? 
+19.	¿Qué funciones cumple la unidad de protección de memoria (MPU)? 
 
 El MPU permite definir y controlar el acceso a determinadas regiones de memoria, asignadas a distintos programas. Para esto diferencia regiones privilegiadas y no 
 privilegiadas. De este modo un programa no puede afectar el funcionamiento del resto del sistema, ya sea por un error de programación o de manera mal intencionada.

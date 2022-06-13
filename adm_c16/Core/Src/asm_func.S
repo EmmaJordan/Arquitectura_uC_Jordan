@@ -529,18 +529,31 @@ pop {r4-r5, pc}
 @   Ninguno
 @
 
-#define vectorX 	r0
-#define vectorY 	r1
-#define vectorCorr	r2
-#define longitud 	r3
-
+#define vectorX 	 r0
+#define vectorY 	 r1
+#define vectorCorr	 r2
+#define longitud 	 r3
+#define longitudFija r3
 .thumb_func
 
 asm_corr:
 //Ejemplo cantidad = 10
-push {r4-r6, lr}
-asr longitud,1 			//shift un bit a la derecha --> cantidad = 5 (mitad de veces con instrucciones SIMD)
-sub longitud,1			//longitud--; --> cantidad = 4 (loop 4 a 0)
+push {r4-r9, lr}
+
+mov r8, longitud	@elementos
+
+asr longitud,1 		@shift un bit a la derecha --> cantidad = 5 (mitad de veces con instrucciones SIMD)
+sub longitud,1		@longitud--;  --> longitud  = 4 (loop 4 a 0)
+mov r9, longitud	@longitudFija para cada iteración
+
+
+	corr_elementos:
+
+		mov longitud, r9
+		mov r7, 0								@suma acumulada reseteada
+		subs r8,1								@elementos--; --> elementos = 9 (loop 9 a 0)
+		bpl corr_while							@salto condicional positivo o cero
+		bal	corr_end							@salto condicional cualquier valor
 
 	corr_while:
 		ldr r4, [vectorX, longitud, LSL 2]   	@ longitud = 4 --> r4 = *(vectorX+16)  <-- avanza de a 32 bits (guarda de 2 valores de 16 bits)
@@ -555,15 +568,16 @@ sub longitud,1			//longitud--; --> cantidad = 4 (loop 4 a 0)
 												@ longitud = 1 --> r5 = *(vectorY+4)
 												@ longitud = 0 --> r5 = *(vectorY+0)
 
-		shadd16 r6, r5, r4						@ smuad: instrucción SIMD Signed Dual Multiply Add
+		smuad r6, r5, r4						@ smuad: instrucción SIMD Signed Dual Multiply Add
 
-		str r6, [vectorCorr, longitud, LSL 2]	@ longitud = 4 --> *(vectorCorr+16) = r6  <-- avanza de a 32 bits (carga de a 2 valores de 16 bits)
-												@ longitud = 3 --> *(vectorCorr+12) = r5
-												@ longitud = 2 --> *(vectorCorr+8)  = r5
-												@ longitud = 1 --> *(vectorCorr+4)  = r5
-												@ longitud = 0 --> *(vectorCorr+0)  = r5
+		add r7, r6								@ suma acumulada
 
 		subs longitud, 1						@longitud--;
 		bpl corr_while							@salto condicional Positive or Zero
 
-pop {r4-r6, pc}
+		strh r7, [vectorCorr, r8, LSL 1]		@*vectorCorr = r7
+		bal corr_elementos						@salto condicional Any Value
+
+	corr_end:
+
+pop {r4-r9, pc}

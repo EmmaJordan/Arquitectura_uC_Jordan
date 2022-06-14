@@ -518,7 +518,7 @@ pop {r4-r5, pc}
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
-@ void fusion(int16_t *vectorX, int16_t *vectorY, int16_t *vectorCorr, uint32_t longitud);
+@ void fusion(int16_t *vectorX, int16_t *vectorY, int32_t *vectorCorr, uint32_t longitud);
 @
 @ Parametros recibidos:
 @   r0: *vectorX
@@ -595,7 +595,7 @@ sub longSIMD,1			@longitud--;  --> longitud  = 4 (loop 4 a 0)
 
     corr_salto:
 
-		strh suma_acumulada, [vectorCorr, indiceElementos, LSL 1]	@*vectorCorr = suma acumulada
+		strh   suma_acumulada, [vectorCorr, indiceElementos, LSL 1]	@*vectorCorr = suma acumulada
 
 		bal corr_elementos									   @salto condicional Any Value
 
@@ -631,23 +631,29 @@ push {r4-r11, lr}
 mov r8, longitud	@índice L = 10
 asr longitud,1 		@shift un bit a la derecha --> longitud = 5 (mitad de veces con instrucciones SIMD)
 sub longitud,1		@longitud--;  --> longitud  = 4 (loop 4 a 0)
-
 mov r9, longitud	@longitudFija para cada iteración (4)
 
 
 	corrSIMD_elementos:
 
-		mov longitud, r9						@vuelve a longitudFija para iterar con SIMD
+		mov longitud, r9						@vuelve a longitudFija
 		mov r7, 0								@suma acumulada reseteada
 		mov r6, 0								@suma reseteada
 		mov r5, 0
 		mov r4, 0
 		mov r10, 0
 		subs r8,1								@índiceL--; (loop 9 a 0)
-		bpl corrSIMD_while							@salto condicional positivo o cero
-		bal	corrSIMD_end							@salto condicional cualquier valor
+		bpl corrSIMD_while						@salto condicional positivo o cero
+		bal	corrSIMD_end						@salto condicional cualquier valor
 
 	corrSIMD_while:
+
+		mov r11, 4
+		mul r10, longitud, r11
+		cmp r10, r8
+		bmi corrSIMD_salto						@negativo
+		sub r10, r8
+		sub r10, r8
 
 		ldr r4, [vectorX, longitud, LSL 2]   	@ longitud = 4 --> r4 = *(vectorX+16)  <-- avanza de a 32 bits (guarda de 2 valores de 16 bits)
 												@ longitud = 3 --> r4 = *(vectorX+12)
@@ -655,20 +661,6 @@ mov r9, longitud	@longitudFija para cada iteración (4)
 												@ longitud = 1 --> r4 = *(vectorX+4)
 												@ longitud = 0 --> r4 = *(vectorX+0)
 
-		/* intento correr el puntero de vectorY L posisiones
-		ldr r10, [vectorY]
-		str r10, [vectorY], -2 */
-
-		/*add longitud, longitud
-		sub longitud, r8
-		bmi	corr_salto*/
-		mov r11, 4
-		mul r10, longitud, r11
-
-		cmp r10, r8
-		bmi corrSIMD_salto							@negativo
-		sub r10, r8
-		sub r10, r8
 
 		ldr r5, [vectorY, r10]  				@ longitud = 4 --> r5 = *(vectorY+16)  <-- avanza de a 32 bits (guarda de a 2 valores de 16 bits)
 												@ longitud = 3 --> r5 = *(vectorY+12)
@@ -678,18 +670,15 @@ mov r9, longitud	@longitudFija para cada iteración (4)
 
 		smuad  r6, r5, r4						@ smuad: instrucción SIMD Signed Dual Multiply Add
 
-		add r7, r6								@ suma acumulada
+		add    r7, r6							@ suma acumulada
 
 	corrSIMD_salto:
 
-		/*add longitud, r8
-		sub longitud, longitud*/
-
 		subs longitud, 1						@longitud--;
-		bpl corrSIMD_while							@salto condicional Positive or Zero
+		bpl corrSIMD_while						@salto condicional Positive or Zero
 
 		strh r7, [vectorCorr, r8, LSL 1]		@*vectorCorr = suma acumulada
-		bal corrSIMD_elementos						@salto condicional Any Value
+		bal corrSIMD_elementos					@salto condicional Any Value
 
 	corrSIMD_end:
 

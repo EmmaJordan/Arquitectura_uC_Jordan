@@ -237,16 +237,20 @@ int main(void)
   llenaArregloSignado16(salida,miLongitud);
   asm_fusion(salida,s1,s2,miLongitud);
 
-  //correlación
+  //correlación sin SIMD
   int16_t  vectorX[miLongitud];
   int16_t  vectorY[miLongitud];
   int16_t  vectorCorr[miLongitud];
 
   llenaArregloS1(vectorX,miLongitud);
   llenaArregloS2(vectorY,miLongitud);
-  llenaArregloSignado16(vectorCorr,miLongitud);
+  llenaVectorCorr16(vectorCorr,miLongitud);
 
   asm_corr(vectorX,vectorY,vectorCorr,miLongitud);
+
+  //correlación sin SIMD
+  llenaVectorCorr16(vectorCorr,miLongitud);
+  asm_corrSIMD(vectorX,vectorY,vectorCorr,miLongitud);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   char miChar = 'a';

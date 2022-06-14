@@ -18,6 +18,8 @@ void llenaArregloSignado(int32_t *vectorOut, uint32_t longitud);
 
 void llenaArregloSignado16(int16_t *vectorOut, uint32_t longitud);
 
+void llenaVectorCorr16(int16_t *vectorOut, uint32_t longitud);
+
 void llenaArregloSignado32(int32_t *vectorOut, uint32_t longitud);
 
 void llenaArregloSignado1(int32_t *vectorOut, uint32_t longitud);

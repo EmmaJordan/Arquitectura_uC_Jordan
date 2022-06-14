@@ -66,6 +66,14 @@ void llenaArregloSignado16(int16_t *vectorOut, uint32_t longitud)
 	}
 }
 
+void llenaVectorCorr16(int16_t *vectorOut, uint32_t longitud)
+{
+	while(longitud--)
+	{
+		vectorOut[longitud] = -1;
+	}
+}
+
 void llenaVectorX(int16_t *vectorOut, uint32_t longitud)
 {
 	int16_t valor = 21;

@@ -203,6 +203,11 @@ este mismo timer en el procesador, por lo que se fomenta su buen uso en lugar de
 El MPU permite definir y controlar el acceso a determinadas regiones de memoria, asignadas a distintos programas. Para esto diferencia regiones privilegiadas y no 
 privilegiadas. De este modo un programa no puede afectar el funcionamiento del resto del sistema, ya sea por un error de programación o de manera mal intencionada.
 
+21.	¿Para qué se suele utilizar la excepción PendSV? ¿Cómo se relaciona su uso con el resto de las excepciones? Dé un ejemplo.
+La excepción PendSV se utiliza para realizar el cambio de contexto entre tareas. Si se está atendiendo una interrupción y el Systick o una instrucción SVC interrumpen 
+para cambio de contexto, PendSV retrasa el pedido hasta que las ISR en ejecución se completen. De esta manera, no se atrasa la ejecución de la ISR. Por su correcto 
+funcionamiento, PendSV debe ser la excepción de prioridad más baja (índice mayor).
+
 ISA
 
 1. ¿Qué son los sufijos y para qué se los utiliza? Dé un ejemplo 

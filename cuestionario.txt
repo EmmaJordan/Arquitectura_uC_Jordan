@@ -176,6 +176,11 @@ Por el contrario, si durante la ejecución de B, ocurre una interrupción C (men
 a la ISR de C. A su vez dentro de la ISR de C podrá ser interrumpida por A y B.  Si no hay nueva interrupción, al finalizar la ISR de C de volverá a la rutina del main en 
 el punto en el que se había quedado.
 
+16.	¿Cómo cambia la operación de stacking al utilizar la unidad de punto flotante?
+
+Al utilizar la FPU, el lazy stacking, en el contexto de una interrupción, no se incluyen los registros asociados a la FPU en el stack, a menos que estos se usen en la ISR. 
+De este modo, se optimiza el tiempo de atención a la ISR.
+
 17.	Explique las características avanzadas de atención a interrupciones: tail chaining y late arrival. 
 
 Tail chaining: es el procedimiento que sigue el procesador cuando éste se encuentra atendiendo una ISR y se dispara otra excepción de mayor prioridad. En ese 

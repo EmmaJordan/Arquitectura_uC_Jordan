@@ -68,6 +68,11 @@ un registro, y luego se lo debe guardar en un registro para pasarlo nuevamente a
 El mapa de memoria de los Cortex M es plano de 4GB. Presenta secciones definidas para el programa, la memoria RAM, los periféricos, etc. Cada sección comienza 
 en un determinado lugar de la memoria representado con un offset.
 
+5.	¿Qué ventajas presenta el uso de los “shadowed pointers” del PSP y el MSP? 
+
+Los stack pointers del OS (MSP) y de las tareas de aplicación (PSP) permiten implementar un OS más confiable y eficiente sobre los Cortex M. El OS puede definir 
+las regiones del stack permitidas para cada tarea, evitando acceder a regiones no permitidas.
+
 6.	Describa los diferentes modos de privilegio y operación del Cortex M, sus relaciones y cómo se conmuta de uno al otro. Describa un ejemplo en el que se 
 pasa del modo privilegiado a no privilegiado y nuevamente a privilegiado.
 

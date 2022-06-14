@@ -208,6 +208,11 @@ La excepción PendSV se utiliza para realizar el cambio de contexto entre tareas
 para cambio de contexto, PendSV retrasa el pedido hasta que las ISR en ejecución se completen. De esta manera, no se atrasa la ejecución de la ISR. Por su correcto 
 funcionamiento, PendSV debe ser la excepción de prioridad más baja (índice mayor).
 
+22.	¿Para qué se suele utilizar la excepción SVC? Explíquelo dentro de un marco de un sistema operativo embebido.
+
+La excepción SVC se utiliza en aquellos procesos de un OS sin acceso privilegiado, permitiendo acceder a los recursos de hardware mediante un servicio propio del OS, 
+funcionando como una especie de API.
+
 ISA
 
 1. ¿Qué son los sufijos y para qué se los utiliza? Dé un ejemplo 

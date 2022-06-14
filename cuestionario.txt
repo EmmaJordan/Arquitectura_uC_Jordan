@@ -176,6 +176,16 @@ Por el contrario, si durante la ejecución de B, ocurre una interrupción C (men
 a la ISR de C. A su vez dentro de la ISR de C podrá ser interrumpida por A y B.  Si no hay nueva interrupción, al finalizar la ISR de C de volverá a la rutina del main en 
 el punto en el que se había quedado.
 
+17.	Explique las características avanzadas de atención a interrupciones: tail chaining y late arrival. 
+
+Tail chaining: es el procedimiento que sigue el procesador cuando éste se encuentra atendiendo una ISR y se dispara otra excepción de mayor prioridad. En ese 
+momento, detiene la ejecución de la ISR, recupera del stack los registros del procesador (salva el contexto nuevamente) y va a atender la ISR de la nueva interrupción. 
+Saltea los pasos de unstacking y stacking para atender directamente dicha ISR, ahorrando ciclos de reloj.
+
+Late arrival: al dispararse una excepción, el procesador antes de saltar a su rutina asociada, al igual que en cualquier salto a función, guarda en el stack los registros del 
+procesador para preservar su valor (salva el contexto). Si durante este proceso se dispara una excepción de mayor prioridad, el procesador completará el stacking y, 
+en lugar de terminar de ejecutar la primera ISR, pasará a ejecutar la ISR de mayor prioridad.
+
 18.	¿Qué es el systick? ¿Por qué puede afirmarse que su implementación favorece la portabilidad de los sistemas operativos embebidos? 
 
 El systick es un timer en el procesador, que genera una interrupción constante con una periodicidad de 1ms. Permite medir tiempos, así como también asignar tareas 

@@ -17,6 +17,7 @@
 .global asm_pack32to16
 .global asm_fusion
 .global asm_corr
+.global asm_corrSIMD
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -529,6 +530,93 @@ pop {r4-r5, pc}
 @   Ninguno
 @
 
+#define vectorX 	 		r0
+#define vectorY 	 		r1
+#define vectorCorr	 		r2
+#define cantidadElementos	r3
+#define valor_vectorX		r4
+#define valor_vectorY		r5
+#define mul_iteracion	 	r6
+#define suma_acumulada	 	r7
+#define indiceVector		r8
+#define indiceVectorY		r9
+#define indiceElementos		r10
+#define longSIMD		    r11
+
+.thumb_func
+
+asm_corr:
+//Ejemplo cantidadElementos = 10
+push {r4-r11, lr}
+
+mov indiceVector, 		cantidadElementos
+mov indiceElementos,	cantidadElementos
+mov longSIMD,		    cantidadElementos
+asr longSIMD,1 			@shift un bit a la derecha --> longitud = 5 (mitad de veces con instrucciones SIMD)
+sub longSIMD,1			@longitud--;  --> longitud  = 4 (loop 4 a 0)
+
+	corr_elementos:
+
+		//Resetea valores
+		mov valor_vectorX,  0
+ 		mov valor_vectorY,  0
+ 		mov mul_iteracion,  0
+ 		mov suma_acumulada, 0
+
+		mov indiceVector, cantidadElementos
+
+		subs indiceElementos, 1					@ índiceVector--; (loop 9 a 0)
+		bpl corr_vector							@ salto condicional positivo o cero
+		bal	corr_end						    @ salto condicional cualquier valor
+
+	corr_vector:
+
+		subs indiceVector, 1					@ cantidad de elementos = 9 (0 a 9 = 10)
+		bpl corr_vectorOK						@ salto condicional positivo o cero
+		bal corr_salto
+
+	corr_vectorOK:
+
+		cmp  indiceVector, indiceElementos
+		bmi  corr_vector						@si es negativo
+
+		ldrh valor_vectorX, [vectorX, indiceVector, LSL 1]
+
+		mov indiceVectorY, indiceVector
+		sub indiceVectorY, indiceElementos
+
+		ldrh valor_vectorY, [vectorY, indiceVectorY, LSL 1]
+
+		mul  mul_iteracion, valor_vectorX, valor_vectorY			@ smuad: instrucción SIMD Signed Dual Multiply Add
+
+		add suma_acumulada, mul_iteracion							@ suma acumulada
+
+		bal corr_vector
+
+    corr_salto:
+
+		strh suma_acumulada, [vectorCorr, indiceElementos, LSL 1]	@*vectorCorr = suma acumulada
+
+		bal corr_elementos									   @salto condicional Any Value
+
+	corr_end:
+
+pop {r4-r11, pc}
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@ void fusion(int16_t *vectorX, int16_t *vectorY, int16_t *vectorCorr, uint32_t longitud);
+@
+@ Parametros recibidos:
+@   r0: *vectorX
+@   r1: *vectorY
+@	r2: *vectorCorr
+@	r3: longitud
+@
+@ Valor de retorno:
+@   Ninguno
+@
+
 #define vectorX 	 r0
 #define vectorY 	 r1
 #define vectorCorr	 r2
@@ -536,7 +624,7 @@ pop {r4-r5, pc}
 
 .thumb_func
 
-asm_corr:
+asm_corrSIMD:
 //Ejemplo longitud = 10
 push {r4-r11, lr}
 
@@ -547,7 +635,7 @@ sub longitud,1		@longitud--;  --> longitud  = 4 (loop 4 a 0)
 mov r9, longitud	@longitudFija para cada iteración (4)
 
 
-	corr_elementos:
+	corrSIMD_elementos:
 
 		mov longitud, r9						@vuelve a longitudFija para iterar con SIMD
 		mov r7, 0								@suma acumulada reseteada
@@ -556,10 +644,10 @@ mov r9, longitud	@longitudFija para cada iteración (4)
 		mov r4, 0
 		mov r10, 0
 		subs r8,1								@índiceL--; (loop 9 a 0)
-		bpl corr_while							@salto condicional positivo o cero
-		bal	corr_end							@salto condicional cualquier valor
+		bpl corrSIMD_while							@salto condicional positivo o cero
+		bal	corrSIMD_end							@salto condicional cualquier valor
 
-	corr_while:
+	corrSIMD_while:
 
 		ldr r4, [vectorX, longitud, LSL 2]   	@ longitud = 4 --> r4 = *(vectorX+16)  <-- avanza de a 32 bits (guarda de 2 valores de 16 bits)
 												@ longitud = 3 --> r4 = *(vectorX+12)
@@ -578,7 +666,7 @@ mov r9, longitud	@longitudFija para cada iteración (4)
 		mul r10, longitud, r11
 
 		cmp r10, r8
-		bmi corr_salto							@negativo
+		bmi corrSIMD_salto							@negativo
 		sub r10, r8
 		sub r10, r8
 
@@ -592,17 +680,17 @@ mov r9, longitud	@longitudFija para cada iteración (4)
 
 		add r7, r6								@ suma acumulada
 
-	corr_salto:
+	corrSIMD_salto:
 
 		/*add longitud, r8
 		sub longitud, longitud*/
 
 		subs longitud, 1						@longitud--;
-		bpl corr_while							@salto condicional Positive or Zero
+		bpl corrSIMD_while							@salto condicional Positive or Zero
 
 		strh r7, [vectorCorr, r8, LSL 1]		@*vectorCorr = suma acumulada
-		bal corr_elementos						@salto condicional Any Value
+		bal corrSIMD_elementos						@salto condicional Any Value
 
-	corr_end:
+	corrSIMD_end:
 
 pop {r4-r11, pc}

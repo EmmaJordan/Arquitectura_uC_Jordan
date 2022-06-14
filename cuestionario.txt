@@ -203,7 +203,14 @@ este mismo timer en el procesador, por lo que se fomenta su buen uso en lugar de
 El MPU permite definir y controlar el acceso a determinadas regiones de memoria, asignadas a distintos programas. Para esto diferencia regiones privilegiadas y no 
 privilegiadas. De este modo un programa no puede afectar el funcionamiento del resto del sistema, ya sea por un error de programación o de manera mal intencionada.
 
+20.	¿Cuántas regiones pueden configurarse como máximo? ¿Qué ocurre en caso de haber solapamientos de las regiones? ¿Qué ocurre con las zonas de memoria 
+no cubiertas por las regiones definidas? 
+
+Pueden configurarse dos secciones: de código y de datos. Las zonas no cubiertas son ignoradas, mientras que el solapamiento es responsabilidad del programador, ya 
+que no éste no está protegido por la arquitectura evitar que se acceda a elementos de una sección desde la otra. 
+
 21.	¿Para qué se suele utilizar la excepción PendSV? ¿Cómo se relaciona su uso con el resto de las excepciones? Dé un ejemplo.
+
 La excepción PendSV se utiliza para realizar el cambio de contexto entre tareas. Si se está atendiendo una interrupción y el Systick o una instrucción SVC interrumpen 
 para cambio de contexto, PendSV retrasa el pedido hasta que las ISR en ejecución se completen. De esta manera, no se atrasa la ejecución de la ISR. Por su correcto 
 funcionamiento, PendSV debe ser la excepción de prioridad más baja (índice mayor).
